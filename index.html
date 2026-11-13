@@ -1,0 +1,423 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CampusTrack | College Transport Management</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Leaflet Map CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">C</div>
+            <div>
+                <h2>CampusTrack</h2>
+                <span>College Portal</span>
+            </div>
+        </div>
+
+        <div class="menu-label">MAIN MENU</div>
+
+        <nav class="navigation">
+
+            <a href="#dashboard" class="nav-link active">
+                <span>▦</span> Dashboard
+            </a>
+
+            <a href="#tracking" class="nav-link">
+                <span>⌖</span> Live Tracking
+            </a>
+
+            <a href="#routes" class="nav-link">
+                <span>⇄</span> Bus Routes
+            </a>
+
+            <a href="#buses" class="nav-link">
+                <span>▤</span> Bus Details
+            </a>
+
+            <a href="#notifications" class="nav-link">
+                <span>♧</span> Notifications
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="support-card">
+                <div class="support-icon">?</div>
+                <h4>Need Help?</h4>
+                <p>Contact the college transport office.</p>
+                <a href="mailto:transport@college.edu">Get Support</a>
+            </div>
+
+            <div class="profile">
+                <div class="avatar">ST</div>
+                <div>
+                    <strong>Student User</strong>
+                    <small>Student Account</small>
+                </div>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="dashboard">
+
+        <!-- TOP HEADER -->
+        <header class="topbar">
+
+            <div>
+                <p class="breadcrumb">College Portal / Transport</p>
+                <h1>Transport Dashboard</h1>
+            </div>
+
+            <div class="topbar-right">
+                <span class="status-indicator">● System Online</span>
+                <div class="top-avatar">ST</div>
+            </div>
+
+        </header>
+
+
+        <!-- WELCOME -->
+        <section class="welcome-section">
+
+            <div>
+                <h2>Welcome to CampusTrack!</h2>
+                <p>Track your college buses and plan your journey.</p>
+            </div>
+
+            <div class="date-display" id="currentDate">
+                Loading date...
+            </div>
+
+        </section>
+
+
+        <!-- STATISTICS -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span>Total Buses</span>
+                    <div class="stat-icon blue">▣</div>
+                </div>
+                <h2>25</h2>
+                <p>Registered college buses</p>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span>Active Buses</span>
+                    <div class="stat-icon green">↗</div>
+                </div>
+                <h2>18</h2>
+                <p><span class="positive">● 18 buses</span> currently active</p>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span>Total Routes</span>
+                    <div class="stat-icon purple">⌖</div>
+                </div>
+                <h2>12</h2>
+                <p>Available college routes</p>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span>Delayed Buses</span>
+                    <div class="stat-icon orange">◷</div>
+                </div>
+                <h2>02</h2>
+                <p><span class="warning">● Needs attention</span></p>
+            </div>
+
+        </section>
+
+
+        <!-- MAP AND BUS INFORMATION -->
+        <section class="content-grid" id="tracking">
+
+            <!-- LIVE MAP -->
+            <div class="panel tracking-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Live Bus Tracking</h3>
+                        <p>View bus location on the map</p>
+                    </div>
+
+                    <span class="live-badge">
+                        <span></span> DEMO LIVE
+                    </span>
+
+                </div>
+
+                <!-- REAL LEAFLET MAP -->
+                <div class="map-area">
+                    <div id="map"></div>
+                </div>
+
+                <div class="map-footer">
+
+                    <div>
+                        <strong id="selectedBusName">Bus TN 30 AB 1234</strong>
+                        <p id="selectedBusRoute">Salem - College Route</p>
+                    </div>
+
+                    <div class="map-eta">
+                        <strong id="eta">10 min</strong>
+                        <small>Estimated Arrival</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- BUS DETAILS -->
+            <div class="panel bus-panel" id="buses">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Available Buses</h3>
+                        <p>Select a bus to view its route</p>
+                    </div>
+
+                </div>
+
+
+                <button class="bus-item bus-select selected" data-bus="0">
+
+                    <div class="bus-icon">🚌</div>
+
+                    <div class="bus-info">
+                        <strong>TN 30 AB 1234</strong>
+                        <small>Salem Route</small>
+                    </div>
+
+                    <span class="bus-status running">Running</span>
+
+                </button>
+
+
+                <button class="bus-item bus-select" data-bus="1">
+
+                    <div class="bus-icon">🚌</div>
+
+                    <div class="bus-info">
+                        <strong>TN 30 CD 5678</strong>
+                        <small>Sankari Route</small>
+                    </div>
+
+                    <span class="bus-status running">Running</span>
+
+                </button>
+
+
+                <button class="bus-item bus-select" data-bus="2">
+
+                    <div class="bus-icon">🚌</div>
+
+                    <div class="bus-info">
+                        <strong>TN 30 EF 9012</strong>
+                        <small>Erode Route</small>
+                    </div>
+
+                    <span class="bus-status delayed">Delayed</span>
+
+                </button>
+
+
+                <button class="bus-item bus-select" data-bus="3">
+
+                    <div class="bus-icon">🚌</div>
+
+                    <div class="bus-info">
+                        <strong>TN 30 GH 3456</strong>
+                        <small>Edappadi Route</small>
+                    </div>
+
+                    <span class="bus-status running">Running</span>
+
+                </button>
+
+
+                <!-- SELECTED BUS INFORMATION -->
+                <div class="selected-bus-details">
+
+                    <h4>Selected Bus Information</h4>
+
+                    <div class="detail-row">
+                        <span>Driver</span>
+                        <strong id="driverName">Ramesh Kumar</strong>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Bus Status</span>
+                        <strong id="busStatus">Running</strong>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Capacity</span>
+                        <strong id="busCapacity">32 / 50</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ROUTES AND NOTIFICATIONS -->
+        <section class="bottom-grid">
+
+            <!-- ROUTES -->
+            <div class="panel" id="routes">
+
+                <div class="panel-header">
+                    <div>
+                        <h3>Popular Routes</h3>
+                        <p>College transportation routes</p>
+                    </div>
+                </div>
+
+
+                <div class="route-item">
+
+                    <div class="route-number">01</div>
+
+                    <div class="route-info">
+                        <strong>Salem - College</strong>
+                        <small>Salem New Bus Stand → College</small>
+                    </div>
+
+                    <span class="route-time">7:30 AM</span>
+
+                </div>
+
+
+                <div class="route-item">
+
+                    <div class="route-number">02</div>
+
+                    <div class="route-info">
+                        <strong>Sankari - College</strong>
+                        <small>Sankari Bus Stand → College</small>
+                    </div>
+
+                    <span class="route-time">7:45 AM</span>
+
+                </div>
+
+
+                <div class="route-item">
+
+                    <div class="route-number">03</div>
+
+                    <div class="route-info">
+                        <strong>Erode - College</strong>
+                        <small>Erode Central → College</small>
+                    </div>
+
+                    <span class="route-time">7:15 AM</span>
+
+                </div>
+
+            </div>
+
+
+            <!-- NOTIFICATIONS -->
+            <div class="panel" id="notifications">
+
+                <div class="panel-header">
+                    <div>
+                        <h3>Recent Notifications</h3>
+                        <p>Transport updates</p>
+                    </div>
+                </div>
+
+
+                <div class="notification-item">
+
+                    <div class="notification-icon orange-bg">!</div>
+
+                    <div>
+                        <strong>Bus Delay Alert</strong>
+                        <p>Bus TN 30 EF 9012 is running 10 minutes late.</p>
+                        <small>10 minutes ago</small>
+                    </div>
+
+                </div>
+
+
+                <div class="notification-item">
+
+                    <div class="notification-icon green-bg">✓</div>
+
+                    <div>
+                        <strong>Trip Started</strong>
+                        <p>Salem route bus has started its journey.</p>
+                        <small>25 minutes ago</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer class="footer">
+
+            <p>© 2026 College Portal | Transport Management System</p>
+
+            <p>CampusTrack • Frontend Demo</p>
+
+        </footer>
+
+    </main>
+
+</div>
+
+<!-- LEAFLET JAVASCRIPT -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- YOUR JAVASCRIPT -->
+<script src="style.js"></script>
+
+</body>
+</html> 
