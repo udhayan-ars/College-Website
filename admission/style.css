@@ -1,0 +1,192 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f1f5fb;
+    color: #243047;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 90px auto;
+    text-align: center;
+    padding: 20px;
+}
+
+.container h1 {
+    color: #173b69;
+    font-size: 32px;
+}
+
+.subtitle {
+    margin: 15px 0 40px;
+    color: #718096;
+}
+
+.roles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.role-card {
+    background: white;
+    padding: 35px 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px #00000010;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.role-card:hover {
+    transform: translateY(-8px);
+}
+
+.emoji {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.role-card h2 {
+    color: #173b69;
+    margin-bottom: 12px;
+}
+
+.role-card p {
+    color: #718096;
+    margin-bottom: 20px;
+}
+
+button {
+    border: none;
+    background: #2463a5;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #173b69;
+}
+
+.login-box {
+    background: white;
+    max-width: 420px;
+    margin: 100px auto;
+    padding: 35px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 20px #00000010;
+}
+
+.login-box h1 {
+    color: #173b69;
+    margin-bottom: 12px;
+}
+
+.login-box form {
+    margin-top: 25px;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    border: 1px solid #ccd5e2;
+    border-radius: 7px;
+}
+
+.login-box form button {
+    width: 100%;
+}
+
+.back {
+    background: #64748b;
+    margin-top: 15px;
+}
+
+.dashboard {
+    padding: 25px;
+}
+
+.dashboard header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #173b69;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.dashboard header button {
+    background: white;
+    color: #173b69;
+}
+
+.welcome {
+    margin: 25px 0;
+    background: #dceaff;
+    padding: 30px;
+    border-radius: 12px;
+}
+
+.welcome h1 {
+    margin-bottom: 10px;
+    color: #173b69;
+}
+
+.services {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.service {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #e0e7f0;
+}
+
+.service h3 {
+    color: #2463a5;
+    margin-bottom: 10px;
+}
+
+.service p {
+    color: #718096;
+    font-size: 14px;
+}
+
+.hidden {
+    display: none;
+}
+
+#loginMessage {
+    margin-top: 15px;
+    color: #c0392b;
+}
+
+@media(max-width: 700px) {
+    .roles, .services {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        margin: 30px auto;
+    }
+
+    .dashboard header {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+}
