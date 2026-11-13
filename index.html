@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Hostel Management System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="login" class="login">
+  <div class="card login-card">
+    <h1>🏠 Smart Hostel</h1>
+    <p class="muted">Management System</p>
+    <label>Username</label>
+    <input id="u" placeholder="e.g. B001, wb, chairman">
+    <label>Password</label>
+    <input id="p" type="password" placeholder="Password">
+    <button class="btn" onclick="login()">Login</button>
+    <p id="err" class="err"></p>
+    <div class="demo">
+      <b>Demo accounts</b><br>
+      Student: <code>B001</code> / <code>1234</code> (Girls: <code>G001</code>)<br>
+      Warden: <code>wb</code> (boys) or <code>wg</code> (girls) / <code>warden123</code><br>
+      Chairman: <code>chairman</code> / <code>chair123</code>
+    </div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <header>
+    <div><b id="title"></b><div class="muted" id="sub"></div></div>
+    <button class="btn small" onclick="logout()">Logout</button>
+  </header>
+  <nav id="nav"></nav>
+  <main id="view"></main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
