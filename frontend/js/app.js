@@ -343,39 +343,16 @@ function togglePassword() {
 
 const SV = {
     student: [
-        'Dashboard',
-        'Profile & ID',
-        'Application',
-        'Academic Details',
-        'Documents',
-        'Admission Fee',
-        'Attendance',
-        'Internal Marks',
-        'Results',
-        'Exam Timetable',
-        'Hall Tickets',
-        'Fees',
-        'Leave Application',
-        'Scholarships',
-        'Certificate Requests',
-        'Grievances',
-        'Library',
-        'Notifications',
-        'Merit & Seat'
+        'Dashboard', 'Profile & ID', 'Application',
+        'Academic Details', 'Documents', 'Admission Fee',
+        'Attendance', 'Internal Marks', 'Results',
+        'Exam Timetable', 'Hall Tickets', 'Fees',
+        'Leave Application', 'Scholarships',
+        'Certificate Requests', 'Grievances',
+        'Library', 'Notifications', 'Merit & Seat'
     ],
-
-    faculty: [
-        'Assigned Applications'
-    ],
-
-    admin: [
-        'Dashboard',
-        'Courses',
-        'Applications',
-        'Faculty',
-        'Merit & Seats',
-        'Announce'
-    ]
+    faculty: ['Assigned Applications'],
+    admin: ['Dashboard', 'Courses', 'Applications', 'Faculty', 'Merit & Seats', 'Announce']
 };
 
 function start() {
@@ -424,6 +401,8 @@ const V = {
 
 student: {
 
+    /* DASHBOARD - KEEPING EXISTING DESIGN */
+
     async Dashboard() {
         const d = await api('/api/student/dashboard');
 
@@ -432,229 +411,95 @@ student: {
             : esc(d.attendance_percentage) + '%';
 
         const stats = [
-            {
-                label: 'My Course',
-                value: d.course || 'Not allotted',
-                icon: 'bi-mortarboard',
-                color: '#4779e6'
-            },
-            {
-                label: 'Attendance',
-                value: attendance,
-                icon: 'bi-calendar-check',
-                color: '#24a477'
-            },
-            {
-                label: 'Total Subjects',
-                value: d.subject_count ?? 0,
-                icon: 'bi-book',
-                color: '#9b70dc'
-            },
-            {
-                label: 'Pending Fees',
-                value: d.pending_fees ?? 0,
-                icon: 'bi-wallet2',
-                color: '#e59b38'
-            }
+            { label:'My Course', value:d.course || 'Not allotted', icon:'bi-mortarboard', color:'#4779e6' },
+            { label:'Attendance', value:attendance, icon:'bi-calendar-check', color:'#24a477' },
+            { label:'Total Subjects', value:d.subject_count ?? 0, icon:'bi-book', color:'#9b70dc' },
+            { label:'Pending Fees', value:d.pending_fees ?? 0, icon:'bi-wallet2', color:'#e59b38' }
         ];
 
         $('main').innerHTML = `
             <style>
-                .sd-wrap {
-                    color: #1d2b45;
-                    width: 100%;
-                }
-
+                .sd-wrap { color:#1d2b45;width:100%; }
                 .sd-welcome {
-                    background: linear-gradient(115deg,#203d78,#315fbd);
-                    color: white;
-                    padding: 28px;
-                    border-radius: 18px;
-                    margin-bottom: 22px;
-                    position: relative;
-                    overflow: hidden;
+                    background:linear-gradient(115deg,#203d78,#315fbd);
+                    color:white;padding:28px;border-radius:18px;
+                    margin-bottom:22px;position:relative;overflow:hidden;
                 }
-
-                .sd-welcome h3 {
-                    font-weight: 700;
-                }
-
-                .sd-welcome p {
-                    color: #e0e9ff;
-                }
-
-                .sd-welcome-icon {
-                    font-size: 75px;
-                    opacity: .2;
-                }
-
+                .sd-welcome h3 { font-weight:700; }
+                .sd-welcome p { color:#e0e9ff; }
+                .sd-welcome-icon { font-size:75px;opacity:.2; }
                 .sd-stats {
-                    display: grid;
-                    grid-template-columns: repeat(4,minmax(0,1fr));
-                    gap: 16px;
-                    margin-bottom: 22px;
+                    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+                    gap:16px;margin-bottom:22px;
                 }
-
                 .sd-stat {
-                    background: white;
-                    border: 1px solid #e6ebf3;
-                    border-radius: 15px;
-                    padding: 20px;
-                    box-shadow: 0 5px 20px rgba(25,40,70,.05);
-                    min-width: 0;
-                    transition: transform .2s, box-shadow .2s;
+                    background:white;border:1px solid #e6ebf3;
+                    border-radius:15px;padding:20px;
+                    box-shadow:0 5px 20px rgba(25,40,70,.05);
+                    min-width:0;transition:transform .2s,box-shadow .2s;
                 }
-
                 .sd-stat:hover {
-                    transform: translateY(-3px);
-                    box-shadow: 0 8px 25px rgba(25,40,70,.09);
+                    transform:translateY(-3px);
+                    box-shadow:0 8px 25px rgba(25,40,70,.09);
                 }
-
                 .sd-stat-icon {
-                    width: 43px;
-                    height: 43px;
-                    border-radius: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 21px;
-                    margin-bottom: 15px;
+                    width:43px;height:43px;border-radius:12px;
+                    display:flex;align-items:center;justify-content:center;
+                    font-size:21px;margin-bottom:15px;
                 }
-
-                .sd-stat h4 {
-                    font-size: 21px;
-                    font-weight: 700;
-                    overflow-wrap: anywhere;
-                }
-
-                .sd-stat small {
-                    color: #8791a4;
-                }
-
+                .sd-stat h4 { font-size:21px;font-weight:700;overflow-wrap:anywhere; }
+                .sd-stat small { color:#8791a4; }
                 .sd-panel {
-                    background: white;
-                    border: 1px solid #e6ebf3;
-                    border-radius: 15px;
-                    padding: 22px;
-                    box-shadow: 0 5px 20px rgba(25,40,70,.04);
-                    height: 100%;
+                    background:white;border:1px solid #e6ebf3;
+                    border-radius:15px;padding:22px;
+                    box-shadow:0 5px 20px rgba(25,40,70,.04);height:100%;
                 }
-
-                .sd-panel h5 {
-                    font-weight: 700;
-                    color: #203d78;
-                }
-
+                .sd-panel h5 { font-weight:700;color:#203d78; }
                 .sd-info {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    gap: 10px;
-                    padding: 13px 0;
-                    border-bottom: 1px solid #edf0f5;
+                    display:flex;justify-content:space-between;
+                    align-items:center;gap:10px;padding:13px 0;
+                    border-bottom:1px solid #edf0f5;
                 }
-
-                .sd-info:last-child {
-                    border: 0;
-                }
-
-                .sd-info span:first-child {
-                    color: #8791a4;
-                }
-
-                .sd-info strong {
-                    text-align: right;
-                    overflow-wrap: anywhere;
-                }
-
+                .sd-info:last-child { border:0; }
+                .sd-info span:first-child { color:#8791a4; }
+                .sd-info strong { text-align:right;overflow-wrap:anywhere; }
                 .sd-actions {
-                    display: grid;
-                    grid-template-columns: repeat(2,minmax(0,1fr));
-                    gap: 12px;
-                    margin-top: 18px;
+                    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+                    gap:12px;margin-top:18px;
                 }
-
                 .sd-action {
-                    border: 1px solid #e6ebf3;
-                    background: #f8faff;
-                    color: #203d78;
-                    padding: 15px;
-                    border-radius: 12px;
-                    text-align: left;
-                    font-weight: 600;
-                    transition: .2s;
-                    cursor: pointer;
+                    border:1px solid #e6ebf3;background:#f8faff;
+                    color:#203d78;padding:15px;border-radius:12px;
+                    text-align:left;font-weight:600;transition:.2s;cursor:pointer;
                 }
-
                 .sd-action:hover {
-                    background: #eaf0ff;
-                    border-color: #315fbd;
-                    transform: translateY(-2px);
+                    background:#eaf0ff;border-color:#315fbd;transform:translateY(-2px);
                 }
-
-                .sd-action i {
-                    display: block;
-                    font-size: 22px;
-                    margin-bottom: 8px;
+                .sd-action i { display:block;font-size:22px;margin-bottom:8px; }
+                @media(max-width:900px) {
+                    .sd-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
                 }
-
-                @media(max-width: 900px) {
-                    .sd-stats {
-                        grid-template-columns: repeat(2,minmax(0,1fr));
-                    }
-                }
-
-                @media(max-width: 500px) {
-                    .sd-welcome {
-                        padding: 20px;
-                    }
-
-                    .sd-welcome h3 {
-                        font-size: 21px;
-                    }
-
-                    .sd-welcome-icon {
-                        font-size: 48px;
-                    }
-
-                    .sd-stats {
-                        gap: 10px;
-                    }
-
-                    .sd-stat {
-                        padding: 14px;
-                    }
-
-                    .sd-stat h4 {
-                        font-size: 17px;
-                    }
-
-                    .sd-panel {
-                        padding: 16px;
-                    }
-
-                    .sd-actions {
-                        grid-template-columns: 1fr;
-                    }
-
-                    .sd-info {
-                        font-size: 13px;
-                    }
+                @media(max-width:500px) {
+                    .sd-welcome { padding:20px; }
+                    .sd-welcome h3 { font-size:21px; }
+                    .sd-welcome-icon { font-size:48px; }
+                    .sd-stats { gap:10px; }
+                    .sd-stat { padding:14px; }
+                    .sd-stat h4 { font-size:17px; }
+                    .sd-panel { padding:16px; }
+                    .sd-actions { grid-template-columns:1fr; }
+                    .sd-info { font-size:13px; }
                 }
             </style>
 
             <div class="sd-wrap">
-
                 <section class="sd-welcome">
                     <div class="row align-items-center">
                         <div class="col-9">
                             <p class="mb-2">STUDENT PORTAL</p>
                             <h3>Welcome back, ${esc(d.name || U.name)}!</h3>
-                            <p class="mb-0">
-                                Here's your academic and admission overview.
-                            </p>
+                            <p class="mb-0">Here's your academic and admission overview.</p>
                         </div>
-
                         <div class="col-3 text-end">
                             <i class="bi bi-mortarboard-fill sd-welcome-icon"></i>
                         </div>
@@ -664,253 +509,106 @@ student: {
                 <div class="sd-stats">
                     ${stats.map(s => `
                         <div class="sd-stat">
-                            <div class="sd-stat-icon"
-                                style="background:${s.color}18;color:${s.color}">
+                            <div class="sd-stat-icon" style="background:${s.color}18;color:${s.color}">
                                 <i class="bi ${s.icon}"></i>
                             </div>
-
                             <small>${esc(s.label)}</small>
                             <h4 class="mt-2 mb-0">${esc(s.value)}</h4>
-                        </div>
-                    `).join('')}
+                        </div>`).join('')}
                 </div>
 
                 <div class="row g-3">
-
                     <div class="col-lg-6">
                         <div class="sd-panel">
-                            <h5>
-                                <i class="bi bi-person-vcard text-primary me-2"></i>
-                                Admission Overview
-                            </h5>
-
-                            <div class="sd-info">
-                                <span>Admission Status</span>
-                                <strong>${badge(d.admission_status)}</strong>
-                            </div>
-
-                            <div class="sd-info">
-                                <span>Register Number</span>
-                                <strong>${esc(d.register_no || 'Not allotted')}</strong>
-                            </div>
-
-                            <div class="sd-info">
-                                <span>Department</span>
-                                <strong>${esc(d.department || 'Not assigned')}</strong>
-                            </div>
-
-                            <div class="sd-info">
-                                <span>Course</span>
-                                <strong>${esc(d.course || 'Not allotted')}</strong>
-                            </div>
+                            <h5><i class="bi bi-person-vcard text-primary me-2"></i>Admission Overview</h5>
+                            <div class="sd-info"><span>Admission Status</span><strong>${badge(d.admission_status)}</strong></div>
+                            <div class="sd-info"><span>Register Number</span><strong>${esc(d.register_no || 'Not allotted')}</strong></div>
+                            <div class="sd-info"><span>Department</span><strong>${esc(d.department || 'Not assigned')}</strong></div>
+                            <div class="sd-info"><span>Course</span><strong>${esc(d.course || 'Not allotted')}</strong></div>
                         </div>
                     </div>
 
                     <div class="col-lg-6">
                         <div class="sd-panel">
-                            <h5>
-                                <i class="bi bi-lightning-charge text-primary me-2"></i>
-                                Quick Actions
-                            </h5>
-
+                            <h5><i class="bi bi-lightning-charge text-primary me-2"></i>Quick Actions</h5>
                             <div class="sd-actions">
-
-                                <button class="sd-action"
-                                    onclick="openStudentPage('Application')">
-                                    <i class="bi bi-file-earmark-text"></i>
-                                    My Application
-                                </button>
-
-                                <button class="sd-action"
-                                    onclick="openStudentPage('Documents')">
-                                    <i class="bi bi-cloud-arrow-up"></i>
-                                    Upload Documents
-                                </button>
-
-                                <button class="sd-action"
-                                    onclick="openStudentPage('Attendance')">
-                                    <i class="bi bi-calendar-check"></i>
-                                    View Attendance
-                                </button>
-
-                                <button class="sd-action"
-                                    onclick="openStudentPage('Fees')">
-                                    <i class="bi bi-wallet2"></i>
-                                    Fee Details
-                                </button>
-
+                                <button class="sd-action" onclick="openStudentPage('Application')"><i class="bi bi-file-earmark-text"></i>My Application</button>
+                                <button class="sd-action" onclick="openStudentPage('Documents')"><i class="bi bi-cloud-arrow-up"></i>Upload Documents</button>
+                                <button class="sd-action" onclick="openStudentPage('Attendance')"><i class="bi bi-calendar-check"></i>View Attendance</button>
+                                <button class="sd-action" onclick="openStudentPage('Fees')"><i class="bi bi-wallet2"></i>Fee Details</button>
                             </div>
                         </div>
                     </div>
-
                 </div>
-            </div>
-        `;
+            </div>`;
     },
 
-    /* PROFILE & ID - REDESIGNED UI */
+
+    /* PROFILE & ID - KEEPING EXISTING DESIGN */
 
     async 'Profile & ID'() {
         const p = await api('/api/student/profile');
-
         const name = p.name || U.name || 'Student';
         const initial = name.trim().charAt(0).toUpperCase();
 
         $('main').innerHTML = `
             <style>
-                .profile-wrap {
-                    color: #20304b;
-                    width: 100%;
-                }
-
+                .profile-wrap { color:#20304b;width:100%; }
                 .profile-header {
-                    background: linear-gradient(115deg,#203d78,#315fbd);
-                    color: white;
-                    padding: 28px;
-                    border-radius: 17px;
-                    margin-bottom: 22px;
-                    display: flex;
-                    align-items: center;
-                    gap: 22px;
-                    flex-wrap: wrap;
-                    box-shadow: 0 6px 20px rgba(32,61,120,.12);
+                    background:linear-gradient(115deg,#203d78,#315fbd);
+                    color:white;padding:28px;border-radius:17px;margin-bottom:22px;
+                    display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+                    box-shadow:0 6px 20px rgba(32,61,120,.12);
                 }
-
                 .profile-avatar {
-                    width: 85px;
-                    height: 85px;
-                    min-width: 85px;
-                    border-radius: 50%;
-                    background: white;
-                    color: #203d78;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 36px;
-                    font-weight: 700;
-                    border: 4px solid #dce7ff;
+                    width:85px;height:85px;min-width:85px;border-radius:50%;
+                    background:white;color:#203d78;display:flex;
+                    align-items:center;justify-content:center;font-size:36px;
+                    font-weight:700;border:4px solid #dce7ff;
                 }
-
-                .profile-header h3 {
-                    font-weight: 700;
-                    margin-bottom: 5px;
-                }
-
-                .profile-header p {
-                    color: #e0e9ff;
-                    margin-bottom: 4px;
-                }
-
+                .profile-header h3 { font-weight:700;margin-bottom:5px; }
+                .profile-header p { color:#e0e9ff;margin-bottom:4px; }
                 .profile-id {
-                    margin-left: auto;
-                    background: rgba(255,255,255,.13);
-                    border: 1px solid rgba(255,255,255,.25);
-                    padding: 13px 18px;
-                    border-radius: 12px;
-                    min-width: 150px;
+                    margin-left:auto;background:rgba(255,255,255,.13);
+                    border:1px solid rgba(255,255,255,.25);
+                    padding:13px 18px;border-radius:12px;min-width:150px;
                 }
-
-                .profile-id small {
-                    display: block;
-                    color: #dce7ff;
-                    margin-bottom: 5px;
-                }
-
-                .profile-id strong {
-                    font-size: 17px;
-                    overflow-wrap: anywhere;
-                }
-
+                .profile-id small { display:block;color:#dce7ff;margin-bottom:5px; }
+                .profile-id strong { font-size:17px;overflow-wrap:anywhere; }
                 .profile-section {
-                    background: white;
-                    border: 1px solid #e6ebf3;
-                    border-radius: 15px;
-                    padding: 22px;
-                    margin-bottom: 18px;
-                    box-shadow: 0 5px 20px rgba(25,40,70,.04);
+                    background:white;border:1px solid #e6ebf3;
+                    border-radius:15px;padding:22px;margin-bottom:18px;
+                    box-shadow:0 5px 20px rgba(25,40,70,.04);
                 }
-
                 .profile-section-title {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                    color: #203d78;
-                    font-weight: 700;
-                    font-size: 17px;
-                    padding-bottom: 15px;
-                    border-bottom: 1px solid #edf0f5;
-                    margin-bottom: 8px;
+                    display:flex;align-items:center;gap:10px;color:#203d78;
+                    font-weight:700;font-size:17px;padding-bottom:15px;
+                    border-bottom:1px solid #edf0f5;margin-bottom:8px;
                 }
-
-                .profile-section-title i {
-                    font-size: 21px;
-                }
-
+                .profile-section-title i { font-size:21px; }
                 .profile-detail {
-                    padding: 14px 5px;
-                    border-bottom: 1px solid #edf0f5;
-                    min-height: 72px;
+                    padding:14px 5px;border-bottom:1px solid #edf0f5;min-height:72px;
                 }
-
-                .profile-detail small {
-                    display: block;
-                    color: #8791a4;
-                    margin-bottom: 6px;
-                }
-
-                .profile-detail strong {
-                    color: #263754;
-                    overflow-wrap: anywhere;
-                    font-size: 14px;
-                }
-
-                .profile-detail i {
-                    color: #315fbd;
-                    margin-right: 6px;
-                }
-
+                .profile-detail small { display:block;color:#8791a4;margin-bottom:6px; }
+                .profile-detail strong { color:#263754;overflow-wrap:anywhere;font-size:14px; }
+                .profile-detail i { color:#315fbd;margin-right:6px; }
                 @media(max-width:600px) {
-                    .profile-header {
-                        padding: 20px;
-                        gap: 14px;
-                    }
-
-                    .profile-avatar {
-                        width: 65px;
-                        height: 65px;
-                        min-width: 65px;
-                        font-size: 27px;
-                    }
-
-                    .profile-header h3 {
-                        font-size: 20px;
-                    }
-
-                    .profile-id {
-                        margin-left: 0;
-                        width: 100%;
-                    }
-
-                    .profile-section {
-                        padding: 16px;
-                    }
+                    .profile-header { padding:20px;gap:14px; }
+                    .profile-avatar { width:65px;height:65px;min-width:65px;font-size:27px; }
+                    .profile-header h3 { font-size:20px; }
+                    .profile-id { margin-left:0;width:100%; }
+                    .profile-section { padding:16px; }
                 }
             </style>
 
             <div class="profile-wrap">
-
                 <section class="profile-header">
                     <div class="profile-avatar">${esc(initial)}</div>
-
                     <div>
                         <p class="small mb-1">STUDENT PROFILE</p>
                         <h3>${esc(name)}</h3>
-                        <p>
-                            <i class="bi bi-mortarboard-fill me-1"></i>
-                            ${esc(p.department || 'Department not assigned')}
-                        </p>
+                        <p><i class="bi bi-mortarboard-fill me-1"></i>${esc(p.department || 'Department not assigned')}</p>
                     </div>
-
                     <div class="profile-id">
                         <small>STUDENT ID</small>
                         <strong>${esc(p.student_code || 'Not allotted')}</strong>
@@ -1684,10 +1382,10 @@ faculty: {
         const rows = await api('/api/faculty/applications');
 
         $('main').innerHTML = tbl(
-            ['Application No', 'Name', 'Course', 'Percentage', 'Status', 'Action'],
+            ['Application No','Name','Course','Percentage','Status','Action'],
             rows.map(a => [
-                esc(a.app_no), esc(a.name), esc(a.course),
-                esc(a.percentage), badge(a.status),
+                esc(a.app_no),esc(a.name),esc(a.course),
+                esc(a.percentage),badge(a.status),
                 `<button class="btn btn-sm btn-primary" onclick="reviewApplication(${a.id})">Review</button>`
             ])
         );
@@ -1696,7 +1394,7 @@ faculty: {
 
 
 /* =====================================================
-   ADMIN PORTAL - EXISTING ADMISSION MANAGEMENT
+   ADMIN PORTAL - EXISTING FUNCTIONALITY
 ===================================================== */
 
 admin: {
@@ -1714,8 +1412,8 @@ admin: {
                     </div>
                 </div>`).join('') +
             `</div>` +
-            tbl(['Course', 'Applications'],
-                s.by_course.map(x => [esc(x.course), esc(x.count)]));
+            tbl(['Course','Applications'],
+                s.by_course.map(x => [esc(x.course),esc(x.count)]));
     },
 
     async Courses() {
@@ -1731,7 +1429,7 @@ admin: {
     },
 
     async Applications() {
-        const [rows, faculty] = await Promise.all([
+        const [rows,faculty] = await Promise.all([
             api('/api/admin/applications'),
             api('/api/admin/faculty')
         ]);
@@ -1740,10 +1438,10 @@ admin: {
             .map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join('');
 
         $('main').innerHTML = tbl(
-            ['Application', 'Student', 'Course', 'Status', 'Recommendation', 'Rank', 'Actions'],
+            ['Application','Student','Course','Status','Recommendation','Rank','Actions'],
             rows.map(a => [
-                esc(a.app_no), esc(a.name), esc(a.course),
-                badge(a.status), esc(a.recommendation), esc(a.rank),
+                esc(a.app_no),esc(a.name),esc(a.course),
+                badge(a.status),esc(a.recommendation),esc(a.rank),
                 `<select id="fs${a.id}" class="form-select form-select-sm mb-1">${options}</select>
                  <button class="btn btn-sm btn-primary" onclick="assignFaculty(${a.id})">Assign</button>
                  <button class="btn btn-sm btn-success" onclick="confirmAdmission(${a.id})">Confirm</button>`
@@ -1755,13 +1453,12 @@ admin: {
         const rows = await api('/api/admin/faculty');
 
         $('main').innerHTML = tbl(
-            ['Name', 'Department', 'Approved', 'Action'],
+            ['Name','Department','Approved','Action'],
             rows.map(f => [
-                esc(f.name), esc(f.dept),
+                esc(f.name),esc(f.dept),
                 badge(f.approved ? 'Approved' : 'Pending'),
                 f.approved ? '' :
-                    `<button class="btn btn-sm btn-primary"
-                        onclick="approveFaculty(${f.id})">Approve</button>`
+                    `<button class="btn btn-sm btn-primary" onclick="approveFaculty(${f.id})">Approve</button>`
             ])
         );
     },
@@ -1769,20 +1466,16 @@ admin: {
     async 'Merit & Seats'() {
         $('main').innerHTML = card(`
             <h5>Merit and Seat Allocation</h5>
-            <button class="btn btn-primary me-2 mb-2"
-                onclick="adminAction('merit/calculate')">1. Calculate Merit</button>
-            <button class="btn btn-warning me-2 mb-2"
-                onclick="adminAction('merit/publish')">2. Publish Merit</button>
-            <button class="btn btn-success mb-2"
-                onclick="adminAction('allocate')">3. Allocate Seats</button>
+            <button class="btn btn-primary me-2 mb-2" onclick="adminAction('merit/calculate')">1. Calculate Merit</button>
+            <button class="btn btn-warning me-2 mb-2" onclick="adminAction('merit/publish')">2. Publish Merit</button>
+            <button class="btn btn-success mb-2" onclick="adminAction('allocate')">3. Allocate Seats</button>
         `);
     },
 
     async Announce() {
         $('main').innerHTML = card(`
             <h5>Send Announcement</h5>
-            <textarea id="an" class="form-control mb-2"
-                placeholder="Enter announcement"></textarea>
+            <textarea id="an" class="form-control mb-2" placeholder="Enter announcement"></textarea>
             <button class="btn btn-primary" onclick="sendAnnouncement()">Send Announcement</button>
         `);
     }
@@ -1799,51 +1492,48 @@ function openStudentPage(page) {
     const button = Array.from(document.querySelectorAll('#nav .btn'))
         .find(item => item.textContent.trim().endsWith(page));
 
-    if (button) {
-        go(page, button);
-    } else {
-        alert('This page is not available in your menu.');
-    }
+    if (button) go(page,button);
+    else alert('This page is not available in your menu.');
 }
 
 
 /* =====================================================
-   STUDENT ACTIONS
+   STUDENT ACTIONS - EXISTING API OPERATIONS
 ===================================================== */
 
 async function saveCourse() {
-    await api('/api/student/application', 'PUT', {
-        course_id: Number($('crs').value)
+    await api('/api/student/application','PUT',{
+        course_id:Number($('crs').value)
     });
     alert('Course saved');
     go('Application');
 }
 
 async function submitAdmission() {
-    await api('/api/student/submit', 'POST');
+    await api('/api/student/submit','POST');
     alert('Application submitted');
     go('Application');
 }
 
 async function saveAcad() {
     const group = key => ({
-        board: $(key + 'b').value,
-        year: $(key + 'y').value,
-        subjects: [0,1,2]
-            .filter(i => $(key + 'm' + i).value !== '')
+        board:$(key+'b').value,
+        year:$(key+'y').value,
+        subjects:[0,1,2]
+            .filter(i => $(key+'m'+i).value !== '')
             .map(i => ({
-                name: $(key + 's' + i).value,
-                marks: Number($(key + 'm' + i).value),
-                max: Number($(key + 'x' + i).value)
+                name:$(key+'s'+i).value,
+                marks:Number($(key+'m'+i).value),
+                max:Number($(key+'x'+i).value)
             }))
     });
 
-    await api('/api/student/application', 'PUT', {
-        details: {
-            tenth: group('tenth'),
-            twelfth: group('twelfth'),
-            guardian: $('guard').value,
-            address: $('addr').value
+    await api('/api/student/application','PUT',{
+        details:{
+            tenth:group('tenth'),
+            twelfth:group('twelfth'),
+            guardian:$('guard').value,
+            address:$('addr').value
         }
     });
 
@@ -1852,36 +1542,35 @@ async function saveAcad() {
 }
 
 async function up(kind) {
-    const file = $('f' + kind.replace(/\W/g, '')).files[0];
-
+    const file = $('f'+kind.replace(/\W/g,'')).files[0];
     if (!file) return alert('Please choose a file');
 
     const form = new FormData();
-    form.append('kind', kind);
-    form.append('file', file);
+    form.append('kind',kind);
+    form.append('file',file);
 
-    await api('/api/student/documents', 'POST', null, form);
+    await api('/api/student/documents','POST',null,form);
     alert('Document uploaded');
     go('Documents');
 }
 
 async function payAdmission() {
-    await api('/api/student/payment', 'POST');
+    await api('/api/student/payment','POST');
     alert('Demo payment recorded');
     go('Admission Fee');
 }
 
 async function payFee(id) {
-    const result = await api(`/api/student/fees/${id}/pay`, 'POST');
+    const result = await api(`/api/student/fees/${id}/pay`,'POST');
     alert(result.message + '\nReference: ' + result.reference);
     go('Fees');
 }
 
 async function applyLeave() {
-    await api('/api/student/leaves', 'POST', {
-        from_date: $('lf').value,
-        to_date: $('lt').value,
-        reason: $('lr').value
+    await api('/api/student/leaves','POST',{
+        from_date:$('lf').value,
+        to_date:$('lt').value,
+        reason:$('lr').value
     });
 
     alert('Leave application submitted');
@@ -1889,8 +1578,8 @@ async function applyLeave() {
 }
 
 async function applyScholarship(id) {
-    await api(`/api/student/scholarships/${id}/apply`, 'POST', {
-        reason: $('sr' + id).value
+    await api(`/api/student/scholarships/${id}/apply`,'POST',{
+        reason:$('sr'+id).value
     });
 
     alert('Scholarship application submitted');
@@ -1898,9 +1587,9 @@ async function applyScholarship(id) {
 }
 
 async function requestCertificate() {
-    await api('/api/student/certificates', 'POST', {
-        certificate_type: $('ct').value,
-        purpose: $('cp').value
+    await api('/api/student/certificates','POST',{
+        certificate_type:$('ct').value,
+        purpose:$('cp').value
     });
 
     alert('Certificate request submitted');
@@ -1908,10 +1597,10 @@ async function requestCertificate() {
 }
 
 async function submitGrievance() {
-    await api('/api/student/grievances', 'POST', {
-        category: $('gc').value,
-        subject: $('gs').value,
-        description: $('gd').value
+    await api('/api/student/grievances','POST',{
+        category:$('gc').value,
+        subject:$('gs').value,
+        description:$('gd').value
     });
 
     alert('Grievance submitted');
@@ -1919,14 +1608,14 @@ async function submitGrievance() {
 }
 
 async function respondSeat(action) {
-    await api('/api/student/allocation/' + action, 'POST');
+    await api('/api/student/allocation/' + action,'POST');
     alert('Your response has been recorded');
     go('Merit & Seat');
 }
 
 
 /* =====================================================
-   FACULTY / ADMIN ACTIONS
+   FACULTY / ADMIN ACTIONS - EXISTING
 ===================================================== */
 
 async function reviewApplication(id) {
@@ -1939,22 +1628,17 @@ async function reviewApplication(id) {
         d.documents.map(x => card(`
             ${esc(x.kind)} ${badge(x.status)}
             <a href="/api/faculty/documents/${x.id}/file" target="_blank">View</a>
-            <button class="btn btn-sm btn-success"
-                onclick="verifyDocument(${x.id},'Approved',${id})">Approve</button>
-            <button class="btn btn-sm btn-danger"
-                onclick="verifyDocument(${x.id},'Rejected',${id})">Reject</button>
+            <button class="btn btn-sm btn-success" onclick="verifyDocument(${x.id},'Approved',${id})">Approve</button>
+            <button class="btn btn-sm btn-danger" onclick="verifyDocument(${x.id},'Rejected',${id})">Reject</button>
         `)).join('') +
         card(`
-            <textarea id="rm" class="form-control mb-2"
-                placeholder="Faculty remarks"></textarea>
-            <button class="btn btn-success"
-                onclick="reviewDecision(${id},'approve')">Recommend Approval</button>
-            <button class="btn btn-danger"
-                onclick="reviewDecision(${id},'reject')">Recommend Rejection</button>
+            <textarea id="rm" class="form-control mb-2" placeholder="Faculty remarks"></textarea>
+            <button class="btn btn-success" onclick="reviewDecision(${id},'approve')">Recommend Approval</button>
+            <button class="btn btn-danger" onclick="reviewDecision(${id},'reject')">Recommend Rejection</button>
         `);
 }
 
-async function verifyDocument(id, status, appId) {
+async function verifyDocument(id,status,appId) {
     let reason = null;
 
     if (status === 'Rejected') {
@@ -1962,17 +1646,17 @@ async function verifyDocument(id, status, appId) {
         if (!reason) return;
     }
 
-    await api(`/api/faculty/documents/${id}/verify`, 'POST', {
-        status, reason
+    await api(`/api/faculty/documents/${id}/verify`,'POST',{
+        status,reason
     });
 
     reviewApplication(appId);
 }
 
-async function reviewDecision(id, recommendation) {
-    const result = await api(`/api/faculty/applications/${id}/review`, 'POST', {
+async function reviewDecision(id,recommendation) {
+    const result = await api(`/api/faculty/applications/${id}/review`,'POST',{
         recommendation,
-        remarks: $('rm').value
+        remarks:$('rm').value
     });
 
     alert('Eligibility: ' + result.eligible);
@@ -1980,12 +1664,12 @@ async function reviewDecision(id, recommendation) {
 }
 
 async function addCourse() {
-    await api('/api/admin/courses', 'POST', {
-        name: $('cn').value,
-        department: $('cd').value,
-        intake: $('ci').value,
-        min_percentage: $('cm').value,
-        fee: $('cfee').value
+    await api('/api/admin/courses','POST',{
+        name:$('cn').value,
+        department:$('cd').value,
+        intake:$('ci').value,
+        min_percentage:$('cm').value,
+        fee:$('cfee').value
     });
 
     alert('Course added');
@@ -1993,37 +1677,36 @@ async function addCourse() {
 }
 
 async function assignFaculty(id) {
-    const facultyId = Number($('fs' + id).value);
-
+    const facultyId = Number($('fs'+id).value);
     if (!facultyId) return alert('Select a faculty member');
 
-    await api(`/api/admin/applications/${id}/assign`, 'POST', {
-        faculty_id: facultyId
+    await api(`/api/admin/applications/${id}/assign`,'POST',{
+        faculty_id:facultyId
     });
 
     go('Applications');
 }
 
 async function confirmAdmission(id) {
-    await api(`/api/admin/applications/${id}/confirm`, 'POST');
+    await api(`/api/admin/applications/${id}/confirm`,'POST');
     alert('Admission confirmed');
     go('Applications');
 }
 
 async function approveFaculty(id) {
-    await api(`/api/admin/faculty/${id}/approve`, 'POST');
+    await api(`/api/admin/faculty/${id}/approve`,'POST');
     go('Faculty');
 }
 
 async function adminAction(path) {
-    const result = await api('/api/admin/' + path, 'POST');
+    const result = await api('/api/admin/' + path,'POST');
     alert('Operation completed');
     console.log(result);
 }
 
 async function sendAnnouncement() {
-    await api('/api/admin/notify', 'POST', {
-        message: $('an').value
+    await api('/api/admin/notify','POST',{
+        message:$('an').value
     });
 
     alert('Announcement sent');
@@ -2031,16 +1714,3 @@ async function sendAnnouncement() {
 }
 
 draw();
-
-function togglePassword() {
-    const password = $('pw');
-    const button = $('pwToggle');
-
-    if (password.type === 'password') {
-        password.type = 'text';
-        button.innerHTML = '<i class="bi bi-eye-slash"></i>';
-    } else {
-        password.type = 'password';
-        button.innerHTML = '<i class="bi bi-eye"></i>';
-    }
-}
