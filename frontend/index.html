@@ -1,34 +1,80 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Smart Hostel Management System</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f8fc">
+  <title>NEXORA | Educational Institution</title>
+  <link rel="stylesheet" href="/portal.css">
+  <script src="/portal.js" defer></script>
 </head>
 <body>
-<div id="login" class="login">
-  <div class="card login-card">
-    <h1>🏠 Smart Hostel</h1>
-    <p class="muted">Management System</p>
-    <label>Username</label>
-    <input id="u" placeholder="e.g. B001, wb, chairman">
-    <label>Password</label>
-    <input id="p" type="password" placeholder="Password">
-    <button class="btn" onclick="login()">Login</button>
-    <p id="err" class="err"></p>
-    <div class="demo">Use the username and password issued by your hostel administrator.</div>
-  </div>
-</div>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <main id="loginScreen" class="login-shell">
+    <section class="login-visual">
+      <div class="visual-top"><div class="brand-mark">N</div><span>NEXORA <i>EDUCATIONAL INSTITUTION</i></span></div>
+      <div class="visual-copy">
+        <p class="eyebrow">ONE CAMPUS. ONE CONNECTED EXPERIENCE.</p>
+        <h1>Everything your campus needs.<br><em>In one place.</em></h1>
+        <p class="visual-description">A smarter way to connect campus services, student life and everyday operations.</p>
+      </div>
+      <div class="visual-footer"><span>Designed for a connected campus</span><span>EST. NEXORA</span></div>
+      <div class="visual-orbit orbit-a"></div><div class="visual-orbit orbit-b"></div>
+    </section>
+    <section class="login-panel">
+      <div class="mobile-brand"><div class="brand-mark">N</div><span>NEXORA</span></div>
+      <div class="login-content">
+        <div class="welcome-label"><span class="status-dot"></span> CAMPUS PORTAL</div>
+        <h2>Welcome back</h2>
+        <p class="login-subtitle">Sign in to continue to your workspace.</p>
+        <form id="loginForm" autocomplete="on">
+          <label for="username">Username</label>
+          <div class="field-wrap"><span class="field-icon">◎</span><input id="username" name="username" type="text" placeholder="Enter your username" autocomplete="username" autocapitalize="none" required maxlength="50"></div>
+          <label for="password">Password</label>
+          <div class="field-wrap"><span class="field-icon">⌑</span><input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required maxlength="72"><button class="show-password" id="togglePassword" type="button" aria-label="Show password">Show</button></div>
+          <div class="form-meta"><label class="remember"><input type="checkbox" id="remember"><span>Keep username</span></label><span class="secure-note"> <span class="lock-icon">▣</span> Secure sign-in</span></div>
+          <button class="primary-button" id="loginButton" type="submit"><span>Sign in to portal</span><span class="button-arrow">↗</span></button>
+          <p id="loginError" class="form-error" role="alert" aria-live="polite"></p>
+        </form>
+        <div class="login-help"><span class="help-icon">i</span><span>Access is provided by your institution. Contact the portal administrator if you need assistance.</span></div>
+      </div>
+      <div class="panel-bottom"><span>© <span id="year"></span> NEXORA EDUCATIONAL INSTITUTION</span><span>POWERED BY <b>UYDD</b></span></div>
+    </section>
+  </main>
 
-<div id="app" class="hidden">
-  <header>
-    <div><b id="title"></b><div class="muted" id="sub"></div></div>
-    <button class="btn small" onclick="logout()">Logout</button>
-  </header>
-  <nav id="nav"></nav>
-  <main id="view"></main>
-</div>
-<script src="script.js"></script>
+  <main id="dashboardScreen" class="dashboard-shell" hidden>
+    <header class="topbar">
+      <a class="top-brand" href="/" aria-label="Nexora home"><span class="brand-mark small-mark">N</span><span><b>NEXORA</b><small>EDUCATIONAL INSTITUTION</small></span></a>
+      <div class="top-actions"><span class="secure-pill"><span class="status-dot"></span> Secure workspace</span><div class="user-chip"><span class="avatar" id="userAvatar">U</span><span class="user-details"><b id="userName">User</b><small>Portal member</small></span></div><button class="logout-button" id="logoutButton" type="button">Sign out <span>↗</span></button></div>
+    </header>
+    <section class="dashboard-content">
+      <div class="dashboard-heading"><div><p class="eyebrow">YOUR CAMPUS WORKSPACE</p><h1 id="greeting">Good morning</h1><p class="dashboard-intro">Choose a workspace to get started. Your campus, connected.</p></div><div class="date-chip"><span class="date-icon">◷</span><span id="todayDate">Campus dashboard</span></div></div>
+      <div class="section-heading"><div><h2>Campus applications</h2><p>Four services. One unified experience.</p></div><span class="module-count">04 MODULES</span></div>
+      <section class="module-grid" aria-label="Campus applications">
+        <a class="module-card hostel-card" href="/hostel/">
+          <div class="card-top"><span class="module-icon">⌂</span><span class="open-indicator">↗</span></div>
+          <div class="module-tag">STUDENT LIFE</div><h3>Smart Hostel</h3><p>Manage hostel operations, attendance, leave requests, complaints and student services.</p>
+          <div class="card-bottom"><span>Open workspace</span><span class="card-arrow">→</span></div>
+        </a>
+        <a class="module-card track-card" href="/modules/campustrack/">
+          <div class="card-top"><span class="module-icon">⌖</span><span class="open-indicator">↗</span></div>
+          <div class="module-tag">CAMPUS MOBILITY</div><h3>CampusTrack</h3><p>Access campus transport tools, bus tracking, route information and travel updates.</p>
+          <div class="card-bottom"><span>Open workspace</span><span class="card-arrow">→</span></div>
+        </a>
+        <a class="module-card admission-card" href="/admission/">
+          <div class="card-top"><span class="module-icon">▤</span><span class="open-indicator">↗</span></div>
+          <div class="module-tag">ADMISSIONS</div><h3>Admission Management</h3><p>Open the admission workspace for student, faculty and administration activities.</p>
+          <div class="card-bottom"><span>Open workspace</span><span class="card-arrow">→</span></div>
+        </a>
+        <a class="module-card canteen-card" href="/modules/canteen_management/">
+          <div class="card-top"><span class="module-icon">♨</span><span class="open-indicator">↗</span></div>
+          <div class="module-tag">CAMPUS DINING</div><h3>Canteen Management</h3><p>View and manage the canteen workspace, menu information and food services.</p>
+          <div class="card-bottom"><span>Open workspace</span><span class="card-arrow">→</span></div>
+        </a>
+      </section>
+      <section class="bottom-note"><div class="note-icon">✦</div><div><b>One connected campus</b><p>Use the same portal sign-in to access the institution's connected workspaces.</p></div><span class="note-owner">UYDD</span></section>
+    </section>
+    <footer class="dashboard-footer"><span>© <span id="dashYear"></span> NEXORA EDUCATIONAL INSTITUTION</span><span>ONE CAMPUS · ONE EXPERIENCE</span></footer>
+  </main>
 </body>
 </html>

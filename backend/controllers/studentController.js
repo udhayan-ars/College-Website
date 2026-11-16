@@ -77,3 +77,48 @@ exports.remove = asyncHandler(async (req, res) => {
   await audit(req.user.id, 'STUDENT_ARCHIVE', id);
   res.json({ message: 'Student archived and room released.' });
 });
+
+// Staff-only student account recovery
+exports.getAccount = asyncHandler(async (req, res) => {
+  const id = req.params.id.toUpperCase();
+  const student = await studentAccess(req, id);
+
+  const [rows] = await db.query(
+    'SELECT id, username, role, student_id, is_active FROM users WHERE student_id=? AND role=? LIMIT 1',
+    [student.id, 'student']
+  );
+
+  const account = rows[0];
+  if (!account) throw new AppError(404, 'Student account not found.');
+
+  res.json({
+    account: {
+      username: account.username,
+      active: Boolean(account.is_active),
+      studentId: account.student_id
+    }
+  });
+});
+
+exports.resetStudentPassword = asyncHandler(async (req, res) => {
+  const id = req.params.id.toUpperCase();
+  const student = await studentAccess(req, id);
+  const password = v.password(req.body.newPassword, 'New password');
+
+  const [rows] = await db.query(
+    'SELECT id, is_active FROM users WHERE student_id=? AND role=? LIMIT 1',
+    [student.id, 'student']
+  );
+
+  const account = rows[0];
+  if (!account || !account.is_active) {
+    throw new AppError(404, 'Active student account not found.');
+  }
+
+  const hash = await bcrypt.hash(password, 12);
+  await User.update(account.id, { password_hash: hash });
+
+  await audit(req.user.id, 'STUDENT_PASSWORD_RESET', student.id);
+
+  res.json({ message: 'Student password reset successfully. Ask the student to change it after login.' });
+});
