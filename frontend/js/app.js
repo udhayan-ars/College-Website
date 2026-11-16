@@ -1618,25 +1618,178 @@ async function respondSeat(action) {
    FACULTY / ADMIN ACTIONS - EXISTING
 ===================================================== */
 
+a
 async function reviewApplication(id) {
-    const d = await api('/api/faculty/applications/' + id);
+    ensureFacultyStyles();
 
-    $('main').innerHTML =
-        card(`<h5>${esc(d.name)} - ${esc(d.app_no)}</h5>
-              Percentage: ${esc(d.percentage)}%
-              <br>Course minimum: ${esc(d.course?.min_percentage)}%`) +
-        d.documents.map(x => card(`
-            ${esc(x.kind)} ${badge(x.status)}
-            <a href="/api/faculty/documents/${x.id}/file" target="_blank">View</a>
-            <button class="btn btn-sm btn-success" onclick="verifyDocument(${x.id},'Approved',${id})">Approve</button>
-            <button class="btn btn-sm btn-danger" onclick="verifyDocument(${x.id},'Rejected',${id})">Reject</button>
-        `)).join('') +
-        card(`
-            <textarea id="rm" class="form-control mb-2" placeholder="Faculty remarks"></textarea>
-            <button class="btn btn-success" onclick="reviewDecision(${id},'approve')">Recommend Approval</button>
-            <button class="btn btn-danger" onclick="reviewDecision(${id},'reject')">Recommend Rejection</button>
-        `);
+    const d = await api('/api/faculty/applications/' + id);
+    const minimum = Number(d.course?.min_percentage ?? 0);
+    const percentage = Number(d.percentage ?? 0);
+    const eligible = d.percentage !== null &&
+        d.percentage !== undefined &&
+        d.course &&
+        percentage >= minimum;
+
+    const details = facultyDetailRows(d.details || {});
+    const documents = d.documents || [];
+
+    $('main').innerHTML = `
+        <div class="faculty-page">
+            <div class="faculty-topbar">
+                <div>
+                    <div class="faculty-eyebrow">FACULTY WORKSPACE</div>
+                    <h2>Application Review</h2>
+                    <p>Review applicant information and verify submitted documents.</p>
+                </div>
+                <button class="btn faculty-back-btn" onclick="go('Assigned Applications')">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Applications
+                </button>
+            </div>
+
+            <div class="faculty-review-hero">
+                <div class="faculty-avatar">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="faculty-eyebrow">APPLICANT</div>
+                    <h3>${esc(d.name)}</h3>
+                    <span class="faculty-app-number">${esc(d.app_no)}</span>
+                </div>
+                <div class="faculty-eligibility ${eligible ? 'eligible' : 'ineligible'}">
+                    <i class="bi ${eligible ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'}"></i>
+                    ${eligible ? 'Eligible' : 'Not Eligible'}
+                </div>
+            </div>
+
+            <div class="row g-3 faculty-metrics">
+                <div class="col-md-4">
+                    <div class="faculty-metric">
+                        <span>Academic Percentage</span>
+                        <strong>${d.percentage ?? 'N/A'}${d.percentage != null ? '%' : ''}</strong>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="faculty-metric">
+                        <span>Minimum Requirement</span>
+                        <strong>${d.course?.min_percentage ?? 'N/A'}${d.course?.min_percentage != null ? '%' : ''}</strong>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="faculty-metric">
+                        <span>Course Applied</span>
+                        <strong>${esc(d.course?.name || 'Not available')}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faculty-section">
+                <div class="faculty-section-heading">
+                    <div class="faculty-section-icon">
+                        <i class="bi bi-person-vcard"></i>
+                    </div>
+                    <div>
+                        <h5>Applicant Information</h5>
+                        <p>Submitted academic and personal details</p>
+                    </div>
+                </div>
+
+                ${details || `
+                    <div class="faculty-empty">
+                        <i class="bi bi-info-circle"></i>
+                        No additional applicant details available.
+                    </div>
+                `}
+            </div>
+
+            <div class="faculty-section">
+                <div class="faculty-section-heading">
+                    <div class="faculty-section-icon">
+                        <i class="bi bi-file-earmark-check"></i>
+                    </div>
+                    <div>
+                        <h5>Document Verification</h5>
+                        <p>Review and verify each uploaded document</p>
+                    </div>
+                    <span class="faculty-count">${documents.length} Documents</span>
+                </div>
+
+                ${documents.length ? `
+                    <div class="faculty-document-list">
+                        ${documents.map(x => `
+                            <div class="faculty-document">
+                                <div class="faculty-document-icon">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6>${esc(x.kind)}</h6>
+                                    ${facultyStatus(x.status)}
+                                    ${x.reason ? `<small class="text-muted">Reason: ${esc(x.reason)}</small>` : ''}
+                                </div>
+                                <div class="faculty-document-actions">
+                                    <a class="btn faculty-view-btn"
+                                       href="/api/faculty/documents/${x.id}/file"
+                                       target="_blank" rel="noopener">
+                                        <i class="bi bi-eye me-1"></i>View
+                                    </a>
+                                    <button class="btn faculty-approve-btn"
+                                        onclick="verifyDocument(${x.id},'Approved',${id})">
+                                        <i class="bi bi-check2 me-1"></i>Approve
+                                    </button>
+                                    <button class="btn faculty-reject-btn"
+                                        onclick="verifyDocument(${x.id},'Rejected',${id})">
+                                        <i class="bi bi-x-lg me-1"></i>Reject
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <div class="faculty-empty">
+                        <i class="bi bi-folder2-open"></i>
+                        No documents have been uploaded.
+                    </div>
+                `}
+            </div>
+
+            <div class="faculty-section">
+                <div class="faculty-section-heading">
+                    <div class="faculty-section-icon">
+                        <i class="bi bi-clipboard2-check"></i>
+                    </div>
+                    <div>
+                        <h5>Final Review Recommendation</h5>
+                        <p>Submit your recommendation to the admission administrator</p>
+                    </div>
+                </div>
+
+                <label class="form-label fw-semibold">Faculty Remarks</label>
+                <textarea id="rm" class="form-control faculty-remarks"
+                    placeholder="Enter your observations and remarks..."></textarea>
+
+                <div class="faculty-review-actions">
+                    <button class="btn faculty-approve-btn"
+                        ${eligible ? '' : 'disabled'}
+                        onclick="reviewDecision(${id},'approve')">
+                        <i class="bi bi-check-circle me-2"></i>Recommend Approval
+                    </button>
+                    <button class="btn faculty-reject-btn"
+                        onclick="reviewDecision(${id},'reject')">
+                        <i class="bi bi-x-circle me-2"></i>Recommend Rejection
+                    </button>
+                </div>
+
+                ${!eligible ? `
+                    <div class="faculty-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        This applicant does not meet the course eligibility requirement.
+                        Approval recommendation is disabled.
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `;
 }
+
 
 async function verifyDocument(id,status,appId) {
     let reason = null;
@@ -1653,6 +1806,7 @@ async function verifyDocument(id,status,appId) {
     reviewApplication(appId);
 }
 
+
 async function reviewDecision(id,recommendation) {
     const result = await api(`/api/faculty/applications/${id}/review`,'POST',{
         recommendation,
@@ -1662,6 +1816,7 @@ async function reviewDecision(id,recommendation) {
     alert('Eligibility: ' + result.eligible);
     go('Assigned Applications');
 }
+
 
 async function addCourse() {
     await api('/api/admin/courses','POST',{
@@ -1676,6 +1831,7 @@ async function addCourse() {
     go('Courses');
 }
 
+
 async function assignFaculty(id) {
     const facultyId = Number($('fs'+id).value);
     if (!facultyId) return alert('Select a faculty member');
@@ -1687,22 +1843,26 @@ async function assignFaculty(id) {
     go('Applications');
 }
 
+
 async function confirmAdmission(id) {
     await api(`/api/admin/applications/${id}/confirm`,'POST');
     alert('Admission confirmed');
     go('Applications');
 }
 
+
 async function approveFaculty(id) {
     await api(`/api/admin/faculty/${id}/approve`,'POST');
     go('Faculty');
 }
+
 
 async function adminAction(path) {
     const result = await api('/api/admin/' + path,'POST');
     alert('Operation completed');
     console.log(result);
 }
+
 
 async function sendAnnouncement() {
     await api('/api/admin/notify','POST',{
@@ -1712,5 +1872,6 @@ async function sendAnnouncement() {
     alert('Announcement sent');
     go('Announce');
 }
+
 
 draw();
