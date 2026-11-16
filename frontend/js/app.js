@@ -61,6 +61,7 @@ function setRole(newRole) {
 
     draw();
 }
+
 function draw() {
     $('ttl').textContent =
         role[0].toUpperCase() + role.slice(1) +
@@ -230,30 +231,325 @@ student: {
     async Dashboard() {
         const d = await api('/api/student/dashboard');
 
+        const attendance = d.attendance_percentage == null
+            ? '—'
+            : esc(d.attendance_percentage) + '%';
+
         const stats = [
-            ['Course', d.course || 'Not allotted'],
-            ['Attendance', d.attendance_percentage == null
-                ? 'No records' : d.attendance_percentage + '%'],
-            ['Subjects', d.subject_count],
-            ['Pending Fees', d.pending_fees]
+            {
+                label: 'My Course',
+                value: d.course || 'Not allotted',
+                icon: 'bi-mortarboard',
+                color: '#4779e6'
+            },
+            {
+                label: 'Attendance',
+                value: attendance,
+                icon: 'bi-calendar-check',
+                color: '#24a477'
+            },
+            {
+                label: 'Total Subjects',
+                value: d.subject_count ?? 0,
+                icon: 'bi-book',
+                color: '#9b70dc'
+            },
+            {
+                label: 'Pending Fees',
+                value: d.pending_fees ?? 0,
+                icon: 'bi-wallet2',
+                color: '#e59b38'
+            }
         ];
 
-        $('main').innerHTML =
-            card(`<h5>Welcome, ${esc(d.name)}</h5>
-                  <p class="text-muted mb-0">Your student academic overview</p>`) +
-            `<div class="row">` +
-            stats.map(([label, value]) => `
-                <div class="col-md-3 col-6">
-                    <div class="card p-3 mb-3">
-                        <small class="text-muted">${label}</small>
-                        <h4 class="mt-2">${esc(value)}</h4>
+        $('main').innerHTML = `
+            <style>
+                .sd-wrap {
+                    color: #1d2b45;
+                    width: 100%;
+                }
+
+                .sd-welcome {
+                    background: linear-gradient(115deg,#203d78,#315fbd);
+                    color: white;
+                    padding: 28px;
+                    border-radius: 18px;
+                    margin-bottom: 22px;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .sd-welcome h3 {
+                    font-weight: 700;
+                }
+
+                .sd-welcome p {
+                    color: #e0e9ff;
+                }
+
+                .sd-welcome-icon {
+                    font-size: 75px;
+                    opacity: .2;
+                }
+
+                .sd-stats {
+                    display: grid;
+                    grid-template-columns: repeat(4,minmax(0,1fr));
+                    gap: 16px;
+                    margin-bottom: 22px;
+                }
+
+                .sd-stat {
+                    background: white;
+                    border: 1px solid #e6ebf3;
+                    border-radius: 15px;
+                    padding: 20px;
+                    box-shadow: 0 5px 20px rgba(25,40,70,.05);
+                    min-width: 0;
+                    transition: transform .2s, box-shadow .2s;
+                }
+
+                .sd-stat:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 25px rgba(25,40,70,.09);
+                }
+
+                .sd-stat-icon {
+                    width: 43px;
+                    height: 43px;
+                    border-radius: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 21px;
+                    margin-bottom: 15px;
+                }
+
+                .sd-stat h4 {
+                    font-size: 21px;
+                    font-weight: 700;
+                    overflow-wrap: anywhere;
+                }
+
+                .sd-stat small {
+                    color: #8791a4;
+                }
+
+                .sd-panel {
+                    background: white;
+                    border: 1px solid #e6ebf3;
+                    border-radius: 15px;
+                    padding: 22px;
+                    box-shadow: 0 5px 20px rgba(25,40,70,.04);
+                    height: 100%;
+                }
+
+                .sd-panel h5 {
+                    font-weight: 700;
+                    color: #203d78;
+                }
+
+                .sd-info {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 13px 0;
+                    border-bottom: 1px solid #edf0f5;
+                }
+
+                .sd-info:last-child {
+                    border: 0;
+                }
+
+                .sd-info span:first-child {
+                    color: #8791a4;
+                }
+
+                .sd-info strong {
+                    text-align: right;
+                    overflow-wrap: anywhere;
+                }
+
+                .sd-actions {
+                    display: grid;
+                    grid-template-columns: repeat(2,minmax(0,1fr));
+                    gap: 12px;
+                    margin-top: 18px;
+                }
+
+                .sd-action {
+                    border: 1px solid #e6ebf3;
+                    background: #f8faff;
+                    color: #203d78;
+                    padding: 15px;
+                    border-radius: 12px;
+                    text-align: left;
+                    font-weight: 600;
+                    transition: .2s;
+                    cursor: pointer;
+                }
+
+                .sd-action:hover {
+                    background: #eaf0ff;
+                    border-color: #315fbd;
+                    transform: translateY(-2px);
+                }
+
+                .sd-action i {
+                    display: block;
+                    font-size: 22px;
+                    margin-bottom: 8px;
+                }
+
+                @media(max-width: 900px) {
+                    .sd-stats {
+                        grid-template-columns: repeat(2,minmax(0,1fr));
+                    }
+                }
+
+                @media(max-width: 500px) {
+                    .sd-welcome {
+                        padding: 20px;
+                    }
+
+                    .sd-welcome h3 {
+                        font-size: 21px;
+                    }
+
+                    .sd-welcome-icon {
+                        font-size: 48px;
+                    }
+
+                    .sd-stats {
+                        gap: 10px;
+                    }
+
+                    .sd-stat {
+                        padding: 14px;
+                    }
+
+                    .sd-stat h4 {
+                        font-size: 17px;
+                    }
+
+                    .sd-panel {
+                        padding: 16px;
+                    }
+
+                    .sd-actions {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .sd-info {
+                        font-size: 13px;
+                    }
+                }
+            </style>
+
+            <div class="sd-wrap">
+
+                <section class="sd-welcome">
+                    <div class="row align-items-center">
+                        <div class="col-9">
+                            <p class="mb-2">STUDENT PORTAL</p>
+                            <h3>Welcome back, ${esc(d.name || U.name)}!</h3>
+                            <p class="mb-0">
+                                Here's your academic and admission overview.
+                            </p>
+                        </div>
+
+                        <div class="col-3 text-end">
+                            <i class="bi bi-mortarboard-fill sd-welcome-icon"></i>
+                        </div>
                     </div>
-                </div>`).join('') +
-            `</div>` +
-            card(`<b>Admission Status:</b> ${badge(d.admission_status)}
-                  <br><b>Register Number:</b> ${esc(d.register_no || 'Not allotted')}
-                  <br><b>Department:</b> ${esc(d.department || '-')}
-            `);
+                </section>
+
+                <div class="sd-stats">
+                    ${stats.map(s => `
+                        <div class="sd-stat">
+                            <div class="sd-stat-icon"
+                                style="background:${s.color}18;color:${s.color}">
+                                <i class="bi ${s.icon}"></i>
+                            </div>
+
+                            <small>${esc(s.label)}</small>
+                            <h4 class="mt-2 mb-0">${esc(s.value)}</h4>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="row g-3">
+
+                    <div class="col-lg-6">
+                        <div class="sd-panel">
+                            <h5>
+                                <i class="bi bi-person-vcard text-primary me-2"></i>
+                                Admission Overview
+                            </h5>
+
+                            <div class="sd-info">
+                                <span>Admission Status</span>
+                                <strong>${badge(d.admission_status)}</strong>
+                            </div>
+
+                            <div class="sd-info">
+                                <span>Register Number</span>
+                                <strong>${esc(d.register_no || 'Not allotted')}</strong>
+                            </div>
+
+                            <div class="sd-info">
+                                <span>Department</span>
+                                <strong>${esc(d.department || 'Not assigned')}</strong>
+                            </div>
+
+                            <div class="sd-info">
+                                <span>Course</span>
+                                <strong>${esc(d.course || 'Not allotted')}</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="sd-panel">
+                            <h5>
+                                <i class="bi bi-lightning-charge text-primary me-2"></i>
+                                Quick Actions
+                            </h5>
+
+                            <div class="sd-actions">
+
+                                <button class="sd-action"
+                                    onclick="openStudentPage('Application')">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                    My Application
+                                </button>
+
+                                <button class="sd-action"
+                                    onclick="openStudentPage('Documents')">
+                                    <i class="bi bi-cloud-arrow-up"></i>
+                                    Upload Documents
+                                </button>
+
+                                <button class="sd-action"
+                                    onclick="openStudentPage('Attendance')">
+                                    <i class="bi bi-calendar-check"></i>
+                                    View Attendance
+                                </button>
+
+                                <button class="sd-action"
+                                    onclick="openStudentPage('Fees')">
+                                    <i class="bi bi-wallet2"></i>
+                                    Fee Details
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        `;
     },
 
     async 'Profile & ID'() {
@@ -754,6 +1050,23 @@ admin: {
 
 
 /* =====================================================
+   STUDENT QUICK ACTION NAVIGATION
+===================================================== */
+
+function openStudentPage(page) {
+    const button = Array.from(
+        document.querySelectorAll('#nav .btn')
+    ).find(item => item.textContent.trim().includes(page));
+
+    if (button) {
+        go(page, button);
+    } else {
+        alert('This page is not available in your menu.');
+    }
+}
+
+
+/* =====================================================
    STUDENT ACTIONS
 ===================================================== */
 
@@ -977,6 +1290,7 @@ async function sendAnnouncement() {
 }
 
 draw();
+
 function togglePassword() {
     const password = $('pw');
     const button = $('pwToggle');
