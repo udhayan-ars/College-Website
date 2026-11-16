@@ -1379,20 +1379,9 @@ student: {
 
 faculty: {
     async 'Assigned Applications'() {
-        const rows = await api('/api/faculty/applications');
-
-        $('main').innerHTML = tbl(
-            ['Application No','Name','Course','Percentage','Status','Action'],
-            rows.map(a => [
-                esc(a.app_no),esc(a.name),esc(a.course),
-                esc(a.percentage),badge(a.status),
-                `<button class="btn btn-sm btn-primary" onclick="reviewApplication(${a.id})">Review</button>`
-            ])
-        );
+        facultyLoadApplications();
     }
 },
-
-
 /* =====================================================
    ADMIN PORTAL - EXISTING FUNCTIONALITY
 ===================================================== */
@@ -1618,7 +1607,6 @@ async function respondSeat(action) {
    FACULTY / ADMIN ACTIONS - EXISTING
 ===================================================== */
 
-a
 async function reviewApplication(id) {
     ensureFacultyStyles();
 
@@ -1872,6 +1860,252 @@ async function sendAnnouncement() {
     alert('Announcement sent');
     go('Announce');
 }
+
+
+function ensureFacultyStyles() {
+    if (document.getElementById('faculty-premium-styles')) return;
+
+    const style = document.createElement('style');
+    style.id = 'faculty-premium-styles';
+
+    style.textContent = `
+        .faculty-page { color:#183452; }
+        .faculty-topbar {
+            display:flex; justify-content:space-between;
+            align-items:center; gap:16px; margin-bottom:24px;
+        }
+        .faculty-eyebrow {
+            color:#66809b; font-size:11px;
+            font-weight:700; letter-spacing:1.4px;
+        }
+        .faculty-topbar h2 { color:#173b68; font-weight:750; }
+        .faculty-topbar p { color:#718096; margin:5px 0 0; }
+        .faculty-back-btn,.faculty-view-btn {
+            border:1px solid #d6e1ed; color:#173b68;
+            background:white;
+        }
+        .faculty-review-hero,.faculty-section {
+            background:white; border:1px solid #e3eaf2;
+            border-radius:14px; padding:22px; margin-bottom:18px;
+        }
+        .faculty-review-hero {
+            display:flex; align-items:center; gap:18px;
+        }
+        .faculty-avatar,.faculty-section-icon {
+            width:48px; height:48px; border-radius:12px;
+            display:grid; place-items:center;
+            background:#eaf1fa; color:#1d4d7c; font-size:23px;
+        }
+        .faculty-review-hero h3 { margin:3px 0; color:#173b68; }
+        .faculty-app-number { color:#718096; font-size:13px; }
+        .faculty-eligibility {
+            padding:8px 13px; border-radius:20px;
+            font-weight:700; font-size:13px;
+        }
+        .faculty-eligibility.eligible { background:#e8f6ed; color:#247343; }
+        .faculty-eligibility.ineligible { background:#fff0ed; color:#b13b32; }
+        .faculty-metric {
+            background:white; border:1px solid #e3eaf2;
+            border-radius:12px; padding:18px; height:100%;
+        }
+        .faculty-metric span { display:block; color:#718096; font-size:12px; }
+        .faculty-metric strong { display:block; color:#173b68; font-size:21px; margin-top:8px; }
+        .faculty-section-heading {
+            display:flex; align-items:center; gap:13px;
+            margin-bottom:20px;
+        }
+        .faculty-section-heading h5 { margin:0; color:#173b68; font-weight:700; }
+        .faculty-section-heading p { margin:4px 0 0; color:#718096; font-size:12px; }
+        .faculty-detail-grid {
+            display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+            gap:12px;
+        }
+        .faculty-detail-item {
+            background:#f7f9fc; padding:13px; border-radius:9px;
+            overflow-wrap:anywhere;
+        }
+        .faculty-detail-item small { display:block; color:#718096; }
+        .faculty-detail-item strong { color:#183452; }
+        .faculty-document {
+            display:flex; align-items:center; gap:14px;
+            padding:15px 0; border-top:1px solid #edf1f5;
+        }
+        .faculty-document-icon { font-size:25px; color:#315f8d; }
+        .faculty-document h6 { margin-bottom:5px; color:#173b68; }
+        .faculty-document-actions { display:flex; gap:7px; flex-wrap:wrap; }
+        .faculty-approve-btn { background:#e8f6ed; color:#247343; }
+        .faculty-reject-btn { background:#fff0ed; color:#b13b32; }
+        .faculty-approve-btn,.faculty-reject-btn {
+            border:0; font-weight:600;
+        }
+        .faculty-status {
+            display:inline-block; padding:5px 10px;
+            border-radius:20px; background:#edf2f7;
+            color:#40566e; font-size:12px; font-weight:650;
+        }
+        .faculty-count { margin-left:auto; color:#718096; font-size:12px; }
+        .faculty-empty {
+            text-align:center; padding:30px 15px;
+            background:#f7f9fc; border-radius:10px; color:#718096;
+        }
+        .faculty-remarks { min-height:110px; }
+        .faculty-review-actions { display:flex; gap:10px; margin-top:15px; flex-wrap:wrap; }
+        .faculty-warning {
+            margin-top:15px; padding:12px; border-radius:8px;
+            background:#fff5df; color:#80570d; font-size:13px;
+        }
+        .faculty-search-box {
+            display:flex; gap:10px; margin-bottom:18px;
+            flex-wrap:wrap;
+        }
+        .faculty-search-box input { flex:1; min-width:180px; }
+        @media(max-width:650px) {
+            .faculty-topbar,.faculty-review-hero { align-items:flex-start; flex-wrap:wrap; }
+            .faculty-document { align-items:flex-start; flex-wrap:wrap; }
+            .faculty-document-actions { width:100%; }
+        }
+    `;
+
+    document.head.appendChild(style);
+}
+
+function facultyStatus(status) {
+    return `<span class="faculty-status">${esc(status || 'Pending')}</span>`;
+}
+
+function facultyDetailRows(details) {
+    if (!details) return '';
+
+    if (typeof details === 'string') {
+        try { details = JSON.parse(details); }
+        catch { return ''; }
+    }
+
+    if (typeof details !== 'object') return '';
+
+    const items = [];
+
+    function collect(obj, prefix = '') {
+        Object.entries(obj).forEach(([key, value]) => {
+            const label = prefix ? prefix + ' / ' + key : key;
+
+            if (value && typeof value === 'object' && !Array.isArray(value)) {
+                collect(value, label);
+            } else {
+                const display = Array.isArray(value)
+                    ? value.join(', ')
+                    : value;
+
+                items.push(`
+                    <div class="faculty-detail-item">
+                        <small>${esc(label)}</small>
+                        <strong>${esc(display ?? 'N/A')}</strong>
+                    </div>
+                `);
+            }
+        });
+    }
+
+    collect(details);
+    return `<div class="faculty-detail-grid">${items.join('')}</div>`;
+}
+
+async function facultyLoadApplications(search = '', status = '') {
+    ensureFacultyStyles();
+
+    const params = new URLSearchParams();
+    if (search.trim()) params.set('q', search.trim());
+    if (status) params.set('status', status);
+
+    const query = params.toString();
+    const endpoint = '/api/faculty/applications' + (query ? '?' + query : '');
+
+    $('main').innerHTML = `
+        <div class="faculty-page">
+            <div class="faculty-topbar">
+                <div>
+                    <div class="faculty-eyebrow">FACULTY WORKSPACE</div>
+                    <h2>Assigned Applications</h2>
+                    <p>Search and review applications assigned to you.</p>
+                </div>
+            </div>
+
+            <div class="faculty-section">
+                <div class="faculty-search-box">
+                    <input id="facultySearch"
+                        class="form-control"
+                        placeholder="Search application number or student name..."
+                        value="${esc(search)}">
+
+                    <select id="facultyStatusFilter" class="form-select"
+                        style="max-width:190px">
+                        <option value="">All Status</option>
+                        <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Pending</option>
+                        <option value="Documents Pending" ${status === 'Documents Pending' ? 'selected' : ''}>Documents Pending</option>
+                        <option value="Eligible" ${status === 'Eligible' ? 'selected' : ''}>Eligible</option>
+                        <option value="Ineligible" ${status === 'Ineligible' ? 'selected' : ''}>Ineligible</option>
+                    </select>
+
+                    <button class="btn btn-primary"
+                        onclick="facultyLoadApplications(
+                            document.getElementById('facultySearch').value,
+                            document.getElementById('facultyStatusFilter').value
+                        )">
+                        <i class="bi bi-search me-1"></i>Search
+                    </button>
+                </div>
+
+                <div id="facultyApplicationResults">
+                    <div class="faculty-empty">
+                        <i class="bi bi-arrow-repeat"></i>
+                        Loading applications...
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    try {
+        const rows = await api(endpoint);
+        const results = $('facultyApplicationResults');
+
+        if (!Array.isArray(rows) || rows.length === 0) {
+            results.innerHTML = `
+                <div class="faculty-empty">
+                    <i class="bi bi-folder2-open fs-2"></i>
+                    <h6 class="mt-2">No applications found</h6>
+                    <p class="mb-0">No applications are currently assigned to you
+                    or no results match your filters.</p>
+                </div>
+            `;
+            return;
+        }
+
+        results.innerHTML = tbl(
+            ['Application No', 'Student Name', 'Course',
+             'Percentage', 'Status', 'Action'],
+            rows.map(a => [
+                esc(a.app_no),
+                esc(a.name),
+                esc(a.course || 'N/A'),
+                esc(a.percentage ?? 'N/A'),
+                facultyStatus(a.status),
+                `<button class="btn btn-sm btn-primary"
+                    onclick="reviewApplication(${Number(a.id)})">
+                    <i class="bi bi-eye me-1"></i>Review
+                </button>`
+            ])
+        );
+    } catch (error) {
+        $('facultyApplicationResults').innerHTML = `
+            <div class="faculty-empty">
+                Unable to load applications. Please refresh and try again.
+            </div>
+        `;
+        console.error('Faculty applications error:', error);
+    }
+}
+
 
 
 draw();
