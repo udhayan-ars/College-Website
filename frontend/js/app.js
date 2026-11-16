@@ -56,18 +56,190 @@ ${headers.map(h => `<th>${esc(h)}</th>`).join('')}
 <tbody>
 ${rows.length ? rows.map(row => `<tr>${row.map(cell =>
     `<td>${cell ?? ''}</td>`).join('')}</tr>`).join('')
-    : `<tr><td colspan="${headers.length}" class="text-center text-muted">No records found</td></tr>`}
+    : `<tr><td colspan="${headers.length}" class="text-center text-muted py-4">No records found</td></tr>`}
 </tbody></table></div>`;
+
+
+/* =====================================================
+   COMMON STUDENT UI HELPERS
+===================================================== */
+
+function studentStyles() {
+    return `
+    <style>
+        .st-page { color:#263754; width:100%; }
+        .st-hero {
+            background:linear-gradient(115deg,#203d78,#315fbd);
+            color:white; padding:25px; border-radius:17px;
+            margin-bottom:20px; box-shadow:0 6px 20px rgba(32,61,120,.10);
+        }
+        .st-hero h3 { font-weight:700; margin-bottom:7px; }
+        .st-hero p { color:#e0e9ff; margin:0; }
+        .st-hero-icon { font-size:43px; opacity:.85; }
+        .st-panel {
+            background:white; border:1px solid #e6ebf3;
+            border-radius:15px; padding:21px; margin-bottom:18px;
+            box-shadow:0 5px 20px rgba(25,40,70,.04);
+        }
+        .st-panel h5,.st-panel h6 {
+            color:#203d78; font-weight:700;
+        }
+        .st-panel-title {
+            color:#203d78; font-size:17px; font-weight:700;
+            padding-bottom:13px; margin-bottom:15px;
+            border-bottom:1px solid #edf0f5;
+        }
+        .st-label {
+            display:block; font-size:12px; color:#8791a4;
+            margin-bottom:6px; font-weight:600;
+        }
+        .st-value { color:#263754; font-weight:700; overflow-wrap:anywhere; }
+        .st-stat {
+            background:white; border:1px solid #e6ebf3;
+            border-radius:14px; padding:17px; height:100%;
+            box-shadow:0 4px 15px rgba(25,40,70,.04);
+        }
+        .st-stat-icon {
+            width:42px;height:42px;border-radius:12px;
+            display:flex;align-items:center;justify-content:center;
+            background:#edf2ff;color:#315fbd;font-size:21px;margin-bottom:12px;
+        }
+        .st-stat small { color:#8791a4; }
+        .st-stat h4 { font-weight:750;color:#203d78;margin:5px 0 0; }
+        .st-row {
+            display:flex;justify-content:space-between;align-items:center;
+            gap:12px;padding:13px 0;border-bottom:1px solid #edf0f5;
+        }
+        .st-row:last-child { border-bottom:0; }
+        .st-row span:first-child { color:#8791a4; }
+        .st-row strong { text-align:right;overflow-wrap:anywhere; }
+        .st-action {
+            border:1px solid #dfe7f5;background:#f7f9ff;
+            color:#203d78;border-radius:10px;padding:10px 15px;
+            font-weight:600;transition:.2s;
+        }
+        .st-action:hover { background:#eaf0ff;border-color:#315fbd; }
+        .st-form label { font-size:13px;font-weight:600;color:#52617a;margin-bottom:6px; }
+        .st-form .form-control,.st-form .form-select {
+            border-color:#dfe5ef;border-radius:9px;padding:10px 12px;
+        }
+        .st-form .form-control:focus,.st-form .form-select:focus {
+            border-color:#315fbd;box-shadow:0 0 0 .2rem rgba(49,95,189,.12);
+        }
+        .st-primary {
+            background:#244783!important;border-color:#244783!important;
+            color:white!important;border-radius:9px;font-weight:600;padding:9px 17px;
+        }
+        .st-primary:hover { background:#315fbd!important; }
+        .st-item {
+            border:1px solid #e6ebf3;border-radius:12px;
+            padding:16px;background:white;margin-bottom:12px;
+        }
+        .st-item:hover { border-color:#b8c9ed; }
+        .st-icon {
+            width:43px;height:43px;border-radius:11px;
+            display:flex;align-items:center;justify-content:center;
+            background:#edf2ff;color:#315fbd;font-size:21px;flex-shrink:0;
+        }
+        .st-empty {
+            text-align:center;padding:28px 15px;color:#8791a4;
+            background:#f8faff;border:1px dashed #d7e0ef;border-radius:12px;
+        }
+        .st-empty i { font-size:32px;display:block;color:#9aafd9;margin-bottom:9px; }
+        .st-progress {
+            height:9px;background:#e9eef7;border-radius:20px;overflow:hidden;
+        }
+        .st-progress > div {
+            height:100%;background:linear-gradient(90deg,#315fbd,#6d91df);
+            border-radius:20px;
+        }
+        .st-table thead th {
+            background:#f1f5fc;color:#294775;white-space:nowrap;
+        }
+        .st-table td { vertical-align:middle; }
+        .st-timeline {
+            border-left:2px solid #dce6f7;margin-left:8px;padding-left:20px;
+        }
+        .st-timeline-item { position:relative;padding-bottom:20px; }
+        .st-timeline-item:before {
+            content:'';position:absolute;left:-27px;top:4px;
+            width:12px;height:12px;background:#315fbd;
+            border:3px solid #e6edfb;border-radius:50%;
+        }
+        .st-ticket {
+            border:1px dashed #aabce0;border-radius:15px;
+            background:linear-gradient(135deg,#f7f9ff,#fff);
+            padding:22px;
+        }
+        @media(max-width:600px) {
+            .st-hero { padding:19px; }
+            .st-hero h3 { font-size:21px; }
+            .st-panel { padding:16px; }
+            .st-row { font-size:13px; }
+            .st-stat { padding:13px; }
+        }
+    </style>`;
+}
+
+function stPage(title, subtitle, icon, content) {
+    $('main').innerHTML = studentStyles() + `
+        <div class="st-page">
+            <section class="st-hero">
+                <div class="row align-items-center">
+                    <div class="col-9">
+                        <p class="small mb-2">STUDENT PORTAL</p>
+                        <h3>${title}</h3>
+                        <p>${subtitle}</p>
+                    </div>
+                    <div class="col-3 text-end">
+                        <i class="bi ${icon} st-hero-icon"></i>
+                    </div>
+                </div>
+            </section>
+            ${content}
+        </div>`;
+}
+
+function stPanel(title, content, icon = 'bi-grid') {
+    return `<section class="st-panel">
+        <div class="st-panel-title"><i class="bi ${icon} me-2"></i>${title}</div>
+        ${content}
+    </section>`;
+}
+
+function stStat(label, value, icon) {
+    return `<div class="col-6 col-lg-3">
+        <div class="st-stat">
+            <div class="st-stat-icon"><i class="bi ${icon}"></i></div>
+            <small>${label}</small>
+            <h4>${esc(value)}</h4>
+        </div>
+    </div>`;
+}
+
+function stEmpty(message, icon = 'bi-inbox') {
+    return `<div class="st-empty"><i class="bi ${icon}"></i>${message}</div>`;
+}
+
+function stField(label, id, value = '', type = 'text', placeholder = '') {
+    return `<div class="mb-3">
+        <label for="${id}">${label}</label>
+        <input id="${id}" type="${type}" class="form-control"
+            value="${esc(value)}" placeholder="${placeholder}">
+    </div>`;
+}
+
+
+/* =====================================================
+   AUTHENTICATION
+===================================================== */
 
 function setRole(newRole) {
     role = newRole;
     reg = false;
 
     document.querySelectorAll('.role-button').forEach(button => {
-        button.classList.toggle(
-            'active',
-            button.dataset.role === newRole
-        );
+        button.classList.toggle('active', button.dataset.role === newRole);
     });
 
     draw();
@@ -148,6 +320,19 @@ async function login() {
 
     } catch (e) {
         $('msg').textContent = e.error || 'Login failed';
+    }
+}
+
+function togglePassword() {
+    const password = $('pw');
+    const button = $('pwToggle');
+
+    if (password.type === 'password') {
+        password.type = 'text';
+        button.innerHTML = '<i class="bi bi-eye-slash"></i>';
+    } else {
+        password.type = 'password';
+        button.innerHTML = '<i class="bi bi-eye"></i>';
     }
 }
 
@@ -733,383 +918,621 @@ student: {
                 </section>
 
                 <section class="profile-section">
-                    <div class="profile-section-title">
-                        <i class="bi bi-person-vcard"></i>
-                        Personal Information
-                    </div>
-
+                    <div class="profile-section-title"><i class="bi bi-person-vcard"></i>Personal Information</div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="profile-detail">
-                                <small><i class="bi bi-person"></i> Full Name</small>
-                                <strong>${esc(p.name || 'Not provided')}</strong>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="profile-detail">
-                                <small><i class="bi bi-envelope"></i> Email Address</small>
-                                <strong>${esc(p.email || 'Not provided')}</strong>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="profile-detail">
-                                <small><i class="bi bi-telephone"></i> Mobile Number</small>
-                                <strong>${esc(p.mobile || 'Not provided')}</strong>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="profile-detail">
-                                <small><i class="bi bi-calendar"></i> Date of Birth</small>
-                                <strong>${esc(p.dob || 'Not provided')}</strong>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="profile-detail">
-                                <small><i class="bi bi-gender-ambiguous"></i> Gender</small>
-                                <strong>${esc(p.gender || 'Not provided')}</strong>
-                            </div>
-                        </div>
+                        ${[
+                            ['Full Name','person',p.name],
+                            ['Email Address','envelope',p.email],
+                            ['Mobile Number','telephone',p.mobile],
+                            ['Date of Birth','calendar',p.dob],
+                            ['Gender','gender-ambiguous',p.gender]
+                        ].map(x => `
+                            <div class="col-md-6">
+                                <div class="profile-detail">
+                                    <small><i class="bi bi-${x[1]}"></i>${x[0]}</small>
+                                    <strong>${esc(x[2] || 'Not provided')}</strong>
+                                </div>
+                            </div>`).join('')}
                     </div>
                 </section>
 
                 <section class="profile-section">
-                    <div class="profile-section-title">
-                        <i class="bi bi-mortarboard"></i>
-                        Academic Information
-                    </div>
-
+                    <div class="profile-section-title"><i class="bi bi-mortarboard"></i>Academic Information</div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="profile-detail">
-                                <small><i class="bi bi-card-heading"></i> Register Number</small>
-                                <strong>${esc(p.register_no || 'Not allotted')}</strong>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="profile-detail">
-                                <small><i class="bi bi-building"></i> Department</small>
-                                <strong>${esc(p.department || 'Not assigned')}</strong>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="profile-detail">
-                                <small><i class="bi bi-book"></i> Course</small>
-                                <strong>${esc(p.course || 'Not allotted')}</strong>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="profile-detail">
-                                <small><i class="bi bi-person-badge"></i> Student Code</small>
-                                <strong>${esc(p.student_code || 'Not allotted')}</strong>
-                            </div>
-                        </div>
+                        ${[
+                            ['Register Number','card-heading',p.register_no || 'Not allotted'],
+                            ['Department','building',p.department || 'Not assigned'],
+                            ['Course','book',p.course || 'Not allotted'],
+                            ['Student Code','person-badge',p.student_code || 'Not allotted']
+                        ].map(x => `
+                            <div class="col-md-6">
+                                <div class="profile-detail">
+                                    <small><i class="bi bi-${x[1]}"></i>${x[0]}</small>
+                                    <strong>${esc(x[2])}</strong>
+                                </div>
+                            </div>`).join('')}
                     </div>
                 </section>
-
-            </div>
-        `;
+            </div>`;
     },
+
+
+    /* APPLICATION */
 
     async Application() {
         const a = await api('/api/student/application');
         const courses = await api('/api/student/courses');
 
-        $('main').innerHTML = card(`
-            <h5>Admission Application</h5>
-            <p>Application Number: <b>${esc(a.app_no)}</b></p>
-            <p>Status: ${badge(a.status)}</p>
+        const progress = String(a.status || '').toLowerCase().includes('approv') ? 100 :
+            String(a.status || '').toLowerCase().includes('submit') ? 70 : 35;
 
-            <label class="form-label">Select Course</label>
-            <select id="crs" class="form-select mb-3">
-                ${courses.map(c => `
-                    <option value="${c.id}" ${c.id == a.course_id ? 'selected' : ''}>
-                        ${esc(c.name)} - ${esc(c.fee)}
-                    </option>`).join('')}
-            </select>
+        stPage('Admission Application','Manage your course preference and admission application.','bi-file-earmark-text',`
+            <div class="row g-3 mb-3">
+                ${stStat('Application Number',a.app_no || 'Not generated','bi-hash')}
+                ${stStat('Application Status',a.status || 'Not submitted','bi-clipboard-check')}
+                ${stStat('Selected Course',a.course || 'Not selected','bi-mortarboard')}
+                ${stStat('Merit Percentage',a.percentage == null ? '—' : a.percentage + '%','bi-graph-up')}
+            </div>
 
-            <button class="btn btn-primary" onclick="saveCourse()">Save Course</button>
-            <button class="btn btn-success" onclick="submitAdmission()">Submit Application</button>
+            ${stPanel('Application Progress',`
+                <div class="d-flex justify-content-between mb-2">
+                    <strong>Current progress</strong>${badge(a.status)}
+                </div>
+                <div class="st-progress"><div style="width:${progress}%"></div></div>
+                <div class="d-flex justify-content-between small text-muted mt-2">
+                    <span>Application started</span><span>Submission / Review</span><span>Admission</span>
+                </div>
+            `,'bi-bar-chart')}
+
+            ${stPanel('Course Preference',`
+                <div class="st-form">
+                    <label>Select your preferred course</label>
+                    <select id="crs" class="form-select mb-3">
+                        ${courses.map(c => `
+                            <option value="${c.id}" ${c.id == a.course_id ? 'selected' : ''}>
+                                ${esc(c.name)} - ${esc(c.fee)}
+                            </option>`).join('')}
+                    </select>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn st-primary" onclick="saveCourse()"><i class="bi bi-save me-1"></i>Save Course</button>
+                        <button class="btn btn-success" onclick="submitAdmission()"><i class="bi bi-send me-1"></i>Submit Application</button>
+                    </div>
+                </div>
+            `,'bi-mortarboard')}
         `);
     },
+
+
+    /* ACADEMIC DETAILS */
 
     async 'Academic Details'() {
         const a = await api('/api/student/application');
         const d = a.details || {};
 
-        const section = (label, key) => `
-            <div class="col-md-6 mb-3">
-                <h6>${label}</h6>
-                <input id="${key}b" class="form-control mb-2"
-                    placeholder="Board" value="${esc(d[key]?.board || '')}">
-                <input id="${key}y" class="form-control mb-2"
-                    placeholder="Passing year" value="${esc(d[key]?.year || '')}">
-
-                ${[0,1,2].map(i => `
-                    <div class="input-group mb-2">
-                        <input id="${key}s${i}" class="form-control"
-                            placeholder="Subject"
-                            value="${esc(d[key]?.subjects?.[i]?.name || '')}">
-                        <input id="${key}m${i}" type="number" class="form-control"
-                            placeholder="Marks"
-                            value="${esc(d[key]?.subjects?.[i]?.marks || '')}">
-                        <input id="${key}x${i}" type="number" class="form-control"
-                            placeholder="Maximum"
-                            value="${esc(d[key]?.subjects?.[i]?.max ?? 100)}">
-                    </div>`).join('')}
+        const section = (label,key) => `
+            <div class="col-lg-6">
+                <div class="st-item">
+                    <h6><i class="bi bi-book-half me-2"></i>${label}</h6>
+                    <div class="st-form">
+                        ${stField('Board / School',key+'b',d[key]?.board || '')}
+                        ${stField('Passing Year',key+'y',d[key]?.year || '','number')}
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle">
+                                <thead><tr><th>Subject</th><th>Marks</th><th>Maximum</th></tr></thead>
+                                <tbody>
+                                    ${[0,1,2].map(i => `
+                                        <tr>
+                                            <td><input id="${key}s${i}" class="form-control form-control-sm" placeholder="Subject" value="${esc(d[key]?.subjects?.[i]?.name || '')}"></td>
+                                            <td><input id="${key}m${i}" type="number" class="form-control form-control-sm" placeholder="Marks" value="${esc(d[key]?.subjects?.[i]?.marks ?? '')}"></td>
+                                            <td><input id="${key}x${i}" type="number" class="form-control form-control-sm" placeholder="Max" value="${esc(d[key]?.subjects?.[i]?.max ?? 100)}"></td>
+                                        </tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>`;
 
-        $('main').innerHTML = card(`
-            <h5>Academic Information</h5>
-
-            <input id="guard" class="form-control mb-2"
-                placeholder="Parent / Guardian name"
-                value="${esc(d.guardian || '')}">
-
-            <textarea id="addr" class="form-control mb-3"
-                placeholder="Permanent address">${esc(d.address || '')}</textarea>
+        stPage('Academic Details','Add and maintain your previous academic information.','bi-journal-bookmark',`
+            ${stPanel('Personal Academic Details',`
+                <div class="row st-form">
+                    <div class="col-md-6">${stField('Parent / Guardian Name','guard',d.guardian || '')}</div>
+                    <div class="col-md-6">
+                        <label>Permanent Address</label>
+                        <textarea id="addr" class="form-control" rows="2" placeholder="Enter permanent address">${esc(d.address || '')}</textarea>
+                    </div>
+                </div>
+            `,'bi-person-lines-fill')}
 
             <div class="row">
-                ${section('10th Standard', 'tenth')}
-                ${section('12th Standard', 'twelfth')}
+                ${section('10th Standard','tenth')}
+                ${section('12th Standard','twelfth')}
             </div>
 
-            <p>Current calculated percentage: <b>${esc(a.percentage ?? '-')}%</b></p>
-            <button class="btn btn-primary" onclick="saveAcad()">Save Academic Details</button>
+            ${stPanel('Academic Summary',`
+                <div class="st-row"><span>Calculated Percentage</span><strong>${esc(a.percentage ?? 'Not calculated')}%</strong></div>
+                <button class="btn st-primary mt-3" onclick="saveAcad()"><i class="bi bi-save me-1"></i>Save Academic Details</button>
+            `,'bi-calculator')}
         `);
     },
 
+
+    /* DOCUMENTS */
+
     async Documents() {
         const a = await api('/api/student/application');
-
         const kinds = [
-            '10th Marksheet',
-            '12th Marksheet',
-            'Transfer Certificate',
-            'Community Certificate',
-            'Photograph',
-            'Government ID'
+            '10th Marksheet','12th Marksheet','Transfer Certificate',
+            'Community Certificate','Photograph','Government ID'
         ];
 
-        $('main').innerHTML = kinds.map(kind => {
-            const doc = a.documents.find(d => d.kind === kind);
+        const uploaded = a.documents || [];
 
-            return card(`
-                <b>${esc(kind)}</b>
-                ${doc ? badge(doc.status) : badge('Not uploaded')}
-                ${doc?.reason ? `<p class="text-danger">${esc(doc.reason)}</p>` : ''}
-                <input type="file" id="f${kind.replace(/\W/g,'')}"
-                    class="form-control my-2">
-                <button class="btn btn-primary btn-sm"
-                    onclick="up('${kind}')">Upload Document</button>
-                ${doc ? `<a class="ms-2" href="/api/student/documents/${encodeURIComponent(kind)}" target="_blank">View</a>` : ''}
-            `);
-        }).join('');
+        stPage('Document Centre','Upload and track the verification status of your admission documents.','bi-cloud-arrow-up',`
+            <div class="row g-3 mb-3">
+                ${stStat('Required Documents',kinds.length,'bi-folder')}
+                ${stStat('Uploaded',uploaded.length,'bi-cloud-check')}
+                ${stStat('Approved',uploaded.filter(d => String(d.status).toLowerCase().includes('approv')).length,'bi-check-circle')}
+                ${stStat('Pending',uploaded.filter(d => String(d.status).toLowerCase().includes('pending')).length,'bi-hourglass')}
+            </div>
+
+            <div class="row">
+                ${kinds.map((kind,i) => {
+                    const doc = uploaded.find(d => d.kind === kind);
+                    const id = 'f' + kind.replace(/\W/g,'');
+                    return `<div class="col-md-6 col-xl-4">
+                        <div class="st-item h-100">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="st-icon"><i class="bi bi-file-earmark-pdf"></i></div>
+                                ${doc ? badge(doc.status) : badge('Not uploaded')}
+                            </div>
+                            <h6>${esc(kind)}</h6>
+                            <p class="small text-muted">${doc ? 'Document submitted for verification.' : 'Upload the required document.'}</p>
+                            ${doc?.reason ? `<p class="small text-danger">${esc(doc.reason)}</p>` : ''}
+                            <div class="st-form">
+                                <input type="file" id="${id}" class="form-control form-control-sm mb-2">
+                                <button class="btn st-primary w-100" onclick="up('${kind}')">
+                                    <i class="bi bi-upload me-1"></i>${doc ? 'Replace / Upload' : 'Upload Document'}
+                                </button>
+                            </div>
+                            ${doc ? `<a class="small d-inline-block mt-2" href="/api/student/documents/${encodeURIComponent(kind)}" target="_blank"><i class="bi bi-eye me-1"></i>View submitted document</a>` : ''}
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+        `);
     },
+
+
+    /* ADMISSION FEE */
 
     async 'Admission Fee'() {
         const a = await api('/api/student/application');
+        const payments = a.payments || [];
+        const total = payments.reduce((sum,p) => sum + (Number(p.amount) || 0),0);
 
-        $('main').innerHTML =
-            card(`<h5>Admission Application Fee</h5>
-                <div class="alert alert-warning">
+        stPage('Admission Fee','View your application fee payment information.','bi-credit-card',`
+            <div class="row g-3 mb-3">
+                ${stStat('Payment Records',payments.length,'bi-receipt')}
+                ${stStat('Recorded Amount',total.toLocaleString('en-IN'),'bi-currency-rupee')}
+                ${stStat('Application Number',a.app_no || '—','bi-hash')}
+                ${stStat('Application Status',a.status || '—','bi-clipboard-check')}
+            </div>
+
+            ${stPanel('Application Fee Payment',`
+                <div class="alert alert-primary">
+                    <i class="bi bi-info-circle me-2"></i>
                     Demo payment only. No real money will be charged.
                 </div>
-                <button class="btn btn-primary"
-                    onclick="payAdmission()">Pay Application Fee</button>`) +
-            tbl(['Reference', 'Amount', 'Mode', 'Status', 'Date'],
-                a.payments.map(p => [
-                    esc(p.ref), esc(p.amount), esc(p.mode),
-                    badge(p.status), esc(p.date?.slice(0,10))
-                ]));
+                <button class="btn st-primary" onclick="payAdmission()">
+                    <i class="bi bi-wallet2 me-1"></i>Pay Application Fee
+                </button>
+            `,'bi-wallet2')}
+
+            ${stPanel('Payment History',tbl(
+                ['Reference','Amount','Mode','Status','Date'],
+                payments.map(p => [
+                    esc(p.ref),esc(p.amount),esc(p.mode),badge(p.status),esc(p.date?.slice(0,10))
+                ])
+            ),'bi-clock-history')}
+        `);
     },
+
+
+    /* ATTENDANCE */
 
     async Attendance() {
         const d = await api('/api/student/attendance');
+        const summary = d.summary || [];
+        const records = d.records || [];
+        const total = summary.reduce((n,s) => n + (Number(s.total_classes) || 0),0);
+        const attended = summary.reduce((n,s) => n + (Number(s.attended) || 0),0);
+        const percentage = total ? Math.round(attended / total * 100) : 0;
 
-        $('main').innerHTML =
-            card('<h5>Subject-wise Attendance</h5>') +
-            tbl(['Subject', 'Code', 'Total Classes', 'Attended', 'Absent', 'Percentage'],
-                d.summary.map(s => [
-                    esc(s.subject), esc(s.subject_code),
-                    s.total_classes, s.attended, s.absent,
-                    s.percentage == null ? '-' : s.percentage + '%'
-                ])) +
-            card('<h5>Attendance History</h5>') +
-            tbl(['Subject', 'Date', 'Period', 'Status', 'Remarks'],
-                d.records.map(r => [
-                    esc(r.subject), esc(r.date), esc(r.period),
-                    badge(r.status), esc(r.remarks)
-                ]));
+        stPage('Attendance Overview','Monitor your class attendance and subject-wise attendance records.','bi-calendar2-check',`
+            <div class="row g-3 mb-3">
+                ${stStat('Overall Attendance',percentage + '%','bi-percent')}
+                ${stStat('Total Classes',total,'bi-calendar3')}
+                ${stStat('Classes Attended',attended,'bi-check-circle')}
+                ${stStat('Classes Absent',Math.max(total-attended,0),'bi-x-circle')}
+            </div>
+
+            ${stPanel('Overall Attendance Progress',`
+                <div class="d-flex justify-content-between mb-2">
+                    <strong>Attendance percentage</strong><strong>${percentage}%</strong>
+                </div>
+                <div class="st-progress"><div style="width:${Math.min(100,percentage)}%"></div></div>
+                <p class="small text-muted mt-2 mb-0">Attendance is calculated from the records available in your portal.</p>
+            `,'bi-graph-up')}
+
+            ${stPanel('Subject-wise Attendance',`
+                <div class="row g-3">
+                    ${summary.map(s => `
+                        <div class="col-md-6">
+                            <div class="st-item mb-0">
+                                <div class="d-flex justify-content-between gap-2">
+                                    <strong>${esc(s.subject)}</strong>${badge((s.percentage ?? 0) + '%')}
+                                </div>
+                                <small class="text-muted">${esc(s.subject_code)}</small>
+                                <div class="st-progress my-3"><div style="width:${Math.min(100,Number(s.percentage)||0)}%"></div></div>
+                                <div class="d-flex justify-content-between small text-muted">
+                                    <span>Attended: ${esc(s.attended)}</span>
+                                    <span>Total: ${esc(s.total_classes)}</span>
+                                </div>
+                            </div>
+                        </div>`).join('') || stEmpty('No subject attendance records available.')}
+                </div>
+            `,'bi-book')}
+
+            ${stPanel('Attendance History',tbl(
+                ['Subject','Date','Period','Status','Remarks'],
+                records.map(r => [
+                    esc(r.subject),esc(r.date),esc(r.period),badge(r.status),esc(r.remarks)
+                ])
+            ),'bi-clock-history')}
+        `);
     },
+
+
+    /* INTERNAL MARKS */
 
     async 'Internal Marks'() {
         const rows = await api('/api/student/internal-marks');
 
-        $('main').innerHTML = tbl(
-            ['Subject', 'Code', 'Assessment', 'Marks', 'Maximum', 'Remarks'],
-            rows.map(r => [
-                esc(r.subject), esc(r.subject_code),
-                esc(r.assessment), esc(r.marks),
-                esc(r.maximum), esc(r.remarks)
-            ])
-        );
+        const total = rows.reduce((n,r) => n + (Number(r.marks)||0),0);
+        const max = rows.reduce((n,r) => n + (Number(r.maximum)||0),0);
+        const avg = max ? Math.round(total / max * 100) : 0;
+
+        stPage('Internal Assessment','Review your internal assessment marks and subject performance.','bi-clipboard-data',`
+            <div class="row g-3 mb-3">
+                ${stStat('Assessments',rows.length,'bi-journal-check')}
+                ${stStat('Marks Obtained',total,'bi-award')}
+                ${stStat('Maximum Marks',max,'bi-bullseye')}
+                ${stStat('Overall Percentage',avg + '%','bi-graph-up')}
+            </div>
+
+            ${stPanel('Assessment Records',`
+                ${rows.length ? `<div class="table-responsive"><table class="table st-table table-hover align-middle">
+                    <thead><tr><th>Subject</th><th>Assessment</th><th>Marks</th><th>Maximum</th><th>Remarks</th></tr></thead>
+                    <tbody>${rows.map(r => `
+                        <tr>
+                            <td><strong>${esc(r.subject)}</strong><br><small class="text-muted">${esc(r.subject_code)}</small></td>
+                            <td>${esc(r.assessment)}</td>
+                            <td><strong>${esc(r.marks)}</strong></td>
+                            <td>${esc(r.maximum)}</td>
+                            <td>${esc(r.remarks)}</td>
+                        </tr>`).join('')}</tbody>
+                </table></div>` : stEmpty('No internal marks have been published.','bi-clipboard-data')}
+            `,'bi-list-check')}
+        `);
     },
+
+
+    /* RESULTS */
 
     async Results() {
         const d = await api('/api/student/results');
+        const results = d.results || [];
 
-        $('main').innerHTML =
-            card(`<h5>Academic Performance</h5>
-                  <h3>CGPA: ${esc(d.cgpa ?? 'Not published')}</h3>`) +
-            tbl(['Semester', 'Subject', 'Internal', 'External',
-                 'Total', 'Grade', 'Grade Points', 'Credits'],
-                d.results.map(r => [
-                    esc(r.semester), esc(r.subject),
-                    esc(r.internal), esc(r.external),
-                    esc(r.total), badge(r.grade),
-                    esc(r.grade_points), esc(r.credits)
-                ]));
+        stPage('Examination Results','View your published semester results and academic performance.','bi-award',`
+            <div class="row g-3 mb-3">
+                ${stStat('Current CGPA',d.cgpa ?? 'Not published','bi-trophy')}
+                ${stStat('Subjects Published',results.length,'bi-book')}
+                ${stStat('Semesters',new Set(results.map(r => r.semester)).size,'bi-calendar3')}
+                ${stStat('Result Status',results.length ? 'Published' : 'Awaiting','bi-clipboard-check')}
+            </div>
+
+            ${stPanel('Academic Result Summary',`
+                <div class="st-ticket mb-3">
+                    <div class="row align-items-center">
+                        <div class="col-7">
+                            <small class="text-muted">CUMULATIVE GRADE POINT AVERAGE</small>
+                            <h2 class="fw-bold text-primary mb-0">${esc(d.cgpa ?? '—')}</h2>
+                        </div>
+                        <div class="col-5 text-end"><i class="bi bi-mortarboard-fill display-3 text-primary"></i></div>
+                    </div>
+                </div>
+                ${results.length ? tbl(
+                    ['Semester','Subject','Internal','External','Total','Grade','Grade Points','Credits'],
+                    results.map(r => [
+                        esc(r.semester),esc(r.subject),esc(r.internal),esc(r.external),
+                        esc(r.total),badge(r.grade),esc(r.grade_points),esc(r.credits)
+                    ])
+                ) : stEmpty('Your examination results have not been published yet.','bi-award')}
+            `,'bi-bar-chart-line')}
+        `);
     },
+
+
+    /* EXAM TIMETABLE */
 
     async 'Exam Timetable'() {
         const rows = await api('/api/student/exam-timetable');
 
-        $('main').innerHTML = tbl(
-            ['Exam', 'Subject', 'Code', 'Date', 'Start', 'End', 'Room', 'Instructions'],
-            rows.map(r => [
-                esc(r.exam_type), esc(r.subject), esc(r.subject_code),
-                esc(r.date), esc(r.start_time), esc(r.end_time),
-                esc(r.room), esc(r.instructions)
-            ])
-        );
+        stPage('Examination Timetable','Check your upcoming examination dates, timings and venues.','bi-calendar-event',`
+            ${stPanel('Exam Schedule',`
+                ${rows.length ? `<div class="table-responsive">
+                    <table class="table st-table table-hover align-middle">
+                        <thead><tr><th>Exam</th><th>Subject</th><th>Date</th><th>Time</th><th>Venue</th></tr></thead>
+                        <tbody>${rows.map(r => `
+                            <tr>
+                                <td>${badge(r.exam_type)}</td>
+                                <td><strong>${esc(r.subject)}</strong><br><small>${esc(r.subject_code)}</small></td>
+                                <td><i class="bi bi-calendar3 me-1 text-primary"></i>${esc(r.date)}</td>
+                                <td>${esc(r.start_time)} - ${esc(r.end_time)}</td>
+                                <td>${esc(r.room)}</td>
+                            </tr>`).join('')}</tbody>
+                    </table></div>` : stEmpty('No examination timetable has been published.','bi-calendar-event')}
+            `,'bi-clock')}
+            ${rows.length ? stPanel('Exam Instructions',`
+                ${rows.map(r => `<div class="st-item">
+                    <strong>${esc(r.subject)}</strong>
+                    <p class="mb-0 small text-muted">${esc(r.instructions || 'No additional instructions')}</p>
+                </div>`).join('')}
+            `,'bi-info-circle') : ''}
+        `);
     },
+
+
+    /* HALL TICKETS */
 
     async 'Hall Tickets'() {
         const rows = await api('/api/student/hall-tickets');
 
-        $('main').innerHTML = tbl(
-            ['Hall Ticket Number', 'Semester', 'Exam', 'Eligible', 'Issued At'],
-            rows.map(r => [
-                `<b>${esc(r.number)}</b>`,
-                esc(r.semester), esc(r.exam_type),
-                badge(r.eligible ? 'Eligible' : 'Not Eligible'),
-                esc(r.issued_at?.slice(0,10))
-            ])
-        );
+        stPage('Hall Tickets','View your examination hall ticket eligibility and issue details.','bi-ticket-perforated',`
+            ${rows.length ? `<div class="row g-3">
+                ${rows.map(r => `
+                    <div class="col-lg-6">
+                        <div class="st-ticket h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="small fw-bold text-primary">EXAMINATION HALL TICKET</span>
+                                <i class="bi bi-patch-check-fill fs-4 text-primary"></i>
+                            </div>
+                            <h5 class="fw-bold">${esc(r.number)}</h5>
+                            <div class="st-row"><span>Semester</span><strong>${esc(r.semester)}</strong></div>
+                            <div class="st-row"><span>Examination</span><strong>${esc(r.exam_type)}</strong></div>
+                            <div class="st-row"><span>Eligibility</span><strong>${badge(r.eligible ? 'Eligible' : 'Not Eligible')}</strong></div>
+                            <div class="st-row"><span>Issued Date</span><strong>${esc(r.issued_at?.slice(0,10) || 'Not issued')}</strong></div>
+                            <div class="mt-3 small text-muted"><i class="bi bi-info-circle me-1"></i>Keep your hall ticket available during examination.</div>
+                        </div>
+                    </div>`).join('')}
+            </div>` : stEmpty('No hall tickets have been issued yet.','bi-ticket-perforated')}
+        `);
     },
+
+
+    /* FEES */
 
     async Fees() {
         const rows = await api('/api/student/fees');
 
-        $('main').innerHTML =
-            card('<div class="alert alert-warning mb-0">Demo payment only. No real money is charged.</div>') +
-            tbl(['Fee Type', 'Amount', 'Due Date', 'Status', 'Reference', 'Action'],
-                rows.map(f => [
-                    esc(f.type), esc(f.amount), esc(f.due_date),
-                    badge(f.status), esc(f.reference || '-'),
-                    f.status === 'Pending'
-                        ? `<button class="btn btn-sm btn-primary" onclick="payFee(${f.id})">Pay Demo Fee</button>`
-                        : badge('Paid')
-                ]));
+        const total = rows.reduce((n,f) => n + (Number(f.amount)||0),0);
+        const paid = rows.filter(f => String(f.status).toLowerCase() === 'paid')
+            .reduce((n,f) => n + (Number(f.amount)||0),0);
+        const pending = total - paid;
+
+        stPage('Fee Management','View your fee details, payment status and outstanding balance.','bi-wallet2',`
+            <div class="row g-3 mb-3">
+                ${stStat('Total Fees',total.toLocaleString('en-IN'),'bi-currency-rupee')}
+                ${stStat('Paid Amount',paid.toLocaleString('en-IN'),'bi-check-circle')}
+                ${stStat('Pending Amount',pending.toLocaleString('en-IN'),'bi-hourglass')}
+                ${stStat('Fee Records',rows.length,'bi-receipt')}
+            </div>
+
+            ${stPanel('Fee Payment Overview',`
+                <div class="d-flex justify-content-between mb-2">
+                    <strong>Payment completion</strong>
+                    <strong>${total ? Math.round(paid/total*100) : 0}%</strong>
+                </div>
+                <div class="st-progress"><div style="width:${total ? Math.min(100,paid/total*100) : 0}%"></div></div>
+                <p class="small text-muted mt-2 mb-0">This summary is based on the fee records returned by the portal.</p>
+            `,'bi-graph-up')}
+
+            ${stPanel('Fee Details',`
+                ${rows.length ? `<div class="table-responsive">
+                    <table class="table st-table table-hover align-middle">
+                        <thead><tr><th>Fee Type</th><th>Amount</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>${rows.map(f => `
+                            <tr>
+                                <td><strong>${esc(f.type)}</strong><br><small class="text-muted">${esc(f.reference || '')}</small></td>
+                                <td>₹${esc(f.amount)}</td>
+                                <td>${esc(f.due_date)}</td>
+                                <td>${badge(f.status)}</td>
+                                <td>${f.status === 'Pending'
+                                    ? `<button class="btn btn-sm st-primary" onclick="payFee(${f.id})">Pay Demo Fee</button>`
+                                    : badge('Paid')}</td>
+                            </tr>`).join('')}</tbody>
+                    </table></div>` : stEmpty('No fee records are available.','bi-wallet2')}
+                <div class="alert alert-warning small mb-0 mt-3">
+                    <i class="bi bi-info-circle me-1"></i>Demo payment only. No real money is charged.
+                </div>
+            `,'bi-receipt')}
+        `);
     },
+
+
+    /* LEAVE APPLICATION */
 
     async 'Leave Application'() {
         const rows = await api('/api/student/leaves');
 
-        $('main').innerHTML =
-            card(`
-                <h5>Apply for Leave</h5>
-                <label>From Date</label>
-                <input type="date" id="lf" class="form-control mb-2">
-                <label>To Date</label>
-                <input type="date" id="lt" class="form-control mb-2">
-                <label>Reason</label>
-                <textarea id="lr" class="form-control mb-2"></textarea>
-                <button class="btn btn-primary" onclick="applyLeave()">Submit Leave</button>
-            `) +
-            tbl(['From', 'To', 'Reason', 'Status', 'Reviewer Note'],
-                rows.map(r => [
-                    esc(r.from_date), esc(r.to_date),
-                    esc(r.reason), badge(r.status),
-                    esc(r.reviewer_note)
-                ]));
+        stPage('Leave Application','Submit a leave request and track the review status.','bi-calendar-minus',`
+            <div class="row g-3">
+                <div class="col-lg-5">
+                    ${stPanel('New Leave Request',`
+                        <div class="st-form">
+                            <div class="mb-3"><label>From Date</label><input type="date" id="lf" class="form-control"></div>
+                            <div class="mb-3"><label>To Date</label><input type="date" id="lt" class="form-control"></div>
+                            <div class="mb-3"><label>Reason for Leave</label><textarea id="lr" rows="4" class="form-control" placeholder="Enter your reason"></textarea></div>
+                            <button class="btn st-primary w-100" onclick="applyLeave()"><i class="bi bi-send me-1"></i>Submit Leave Request</button>
+                        </div>
+                    `,'bi-pencil-square')}
+                </div>
+                <div class="col-lg-7">
+                    ${stPanel('My Leave Requests',`
+                        ${rows.length ? rows.map(r => `
+                            <div class="st-item">
+                                <div class="d-flex justify-content-between gap-2">
+                                    <strong>${esc(r.from_date)} to ${esc(r.to_date)}</strong>${badge(r.status)}
+                                </div>
+                                <p class="small text-muted mt-2 mb-1">${esc(r.reason)}</p>
+                                ${r.reviewer_note ? `<div class="small"><strong>Reviewer note:</strong> ${esc(r.reviewer_note)}</div>` : ''}
+                            </div>`).join('') : stEmpty('You have not submitted any leave requests.','bi-calendar-minus')}
+                    `,'bi-clock-history')}
+                </div>
+            </div>
+        `);
     },
+
+
+    /* SCHOLARSHIPS */
 
     async Scholarships() {
         const rows = await api('/api/student/scholarships');
 
-        $('main').innerHTML = rows.map(s => card(`
-            <h5>${esc(s.title)}</h5>
-            <p>${esc(s.description)}</p>
-            <p><b>Eligibility:</b> ${esc(s.eligibility)}</p>
-            <p><b>Amount:</b> ${esc(s.amount)}</p>
-            <p>Status: ${badge(s.application_status || 'Not Applied')}</p>
-            ${!s.application_status
-                ? `<textarea id="sr${s.id}" class="form-control mb-2"
-                     placeholder="Why are you applying?"></textarea>
-                   <button class="btn btn-primary"
-                     onclick="applyScholarship(${s.id})">Apply</button>`
-                : ''}
-        `)).join('') || card('No scholarships available currently.');
+        stPage('Scholarships','Explore available scholarships and submit your applications.','bi-award',`
+            <div class="row g-3 mb-3">
+                ${stStat('Available Scholarships',rows.length,'bi-award')}
+                ${stStat('Applied',rows.filter(s => s.application_status).length,'bi-send-check')}
+                ${stStat('Not Applied',rows.filter(s => !s.application_status).length,'bi-hourglass')}
+                ${stStat('Application Centre','Open','bi-mortarboard')}
+            </div>
+
+            <div class="row">
+                ${rows.length ? rows.map(s => `
+                    <div class="col-md-6 col-xl-4">
+                        <div class="st-item h-100">
+                            <div class="d-flex justify-content-between mb-3">
+                                <div class="st-icon"><i class="bi bi-award"></i></div>
+                                ${badge(s.application_status || 'Not Applied')}
+                            </div>
+                            <h5>${esc(s.title)}</h5>
+                            <p class="text-muted small">${esc(s.description)}</p>
+                            <div class="st-row"><span>Scholarship Amount</span><strong>${esc(s.amount)}</strong></div>
+                            <div class="mt-3">
+                                <small class="st-label">ELIGIBILITY</small>
+                                <p class="small">${esc(s.eligibility)}</p>
+                            </div>
+                            ${!s.application_status ? `
+                                <div class="st-form mt-3">
+                                    <label>Application Reason</label>
+                                    <textarea id="sr${s.id}" class="form-control mb-2" rows="2" placeholder="Why are you applying?"></textarea>
+                                    <button class="btn st-primary w-100" onclick="applyScholarship(${s.id})">Apply Now</button>
+                                </div>` : ''}
+                        </div>
+                    </div>`).join('') : stEmpty('No scholarships are currently available.','bi-award')}
+            </div>
+        `);
     },
+
+
+    /* CERTIFICATE REQUESTS */
 
     async 'Certificate Requests'() {
         const rows = await api('/api/student/certificates');
 
-        $('main').innerHTML =
-            card(`
-                <h5>Request a Certificate</h5>
-                <select id="ct" class="form-select mb-2">
-                    <option>Bonafide Certificate</option>
-                    <option>Transfer Certificate</option>
-                    <option>Course Completion Certificate</option>
-                    <option>Character Certificate</option>
-                    <option>Fee Certificate</option>
-                </select>
-                <textarea id="cp" class="form-control mb-2"
-                    placeholder="Purpose of certificate"></textarea>
-                <button class="btn btn-primary" onclick="requestCertificate()">Submit Request</button>
-            `) +
-            tbl(['Certificate', 'Purpose', 'Status', 'Admin Note'],
-                rows.map(r => [
-                    esc(r.type), esc(r.purpose),
-                    badge(r.status), esc(r.admin_note)
-                ]));
+        stPage('Certificate Services','Request academic certificates and follow their processing status.','bi-file-earmark-medical',`
+            <div class="row g-3">
+                <div class="col-lg-5">
+                    ${stPanel('New Certificate Request',`
+                        <div class="st-form">
+                            <label>Certificate Type</label>
+                            <select id="ct" class="form-select mb-3">
+                                <option>Bonafide Certificate</option>
+                                <option>Transfer Certificate</option>
+                                <option>Course Completion Certificate</option>
+                                <option>Character Certificate</option>
+                                <option>Fee Certificate</option>
+                            </select>
+                            <label>Purpose</label>
+                            <textarea id="cp" class="form-control mb-3" rows="4" placeholder="Explain why you need this certificate"></textarea>
+                            <button class="btn st-primary w-100" onclick="requestCertificate()"><i class="bi bi-send me-1"></i>Submit Request</button>
+                        </div>
+                    `,'bi-pencil-square')}
+                </div>
+                <div class="col-lg-7">
+                    ${stPanel('Request History',`
+                        ${rows.length ? rows.map(r => `
+                            <div class="st-item">
+                                <div class="d-flex justify-content-between align-items-center gap-2">
+                                    <strong>${esc(r.type)}</strong>${badge(r.status)}
+                                </div>
+                                <p class="small text-muted mt-2 mb-1">${esc(r.purpose)}</p>
+                                ${r.admin_note ? `<small><strong>Admin Note:</strong> ${esc(r.admin_note)}</small>` : ''}
+                            </div>`).join('') : stEmpty('No certificate requests submitted.','bi-file-earmark')}
+                    `,'bi-clock-history')}
+                </div>
+            </div>
+        `);
     },
+
+
+    /* GRIEVANCES */
 
     async Grievances() {
         const rows = await api('/api/student/grievances');
 
-        $('main').innerHTML =
-            card(`
-                <h5>Submit a Grievance</h5>
-                <select id="gc" class="form-select mb-2">
-                    <option>Academic</option>
-                    <option>Examination</option>
-                    <option>Fees</option>
-                    <option>Faculty</option>
-                    <option>Infrastructure</option>
-                    <option>Other</option>
-                </select>
-                <input id="gs" class="form-control mb-2" placeholder="Subject">
-                <textarea id="gd" class="form-control mb-2"
-                    placeholder="Describe your grievance"></textarea>
-                <button class="btn btn-primary" onclick="submitGrievance()">Submit Grievance</button>
-            `) +
-            tbl(['Category', 'Subject', 'Description', 'Status', 'Response'],
-                rows.map(r => [
-                    esc(r.category), esc(r.subject),
-                    esc(r.description), badge(r.status),
-                    esc(r.response)
-                ]));
+        stPage('Student Grievance Centre','Submit a concern and track the response from the administration.','bi-chat-square-text',`
+            <div class="row g-3">
+                <div class="col-lg-5">
+                    ${stPanel('Submit a Grievance',`
+                        <div class="st-form">
+                            <label>Grievance Category</label>
+                            <select id="gc" class="form-select mb-3">
+                                <option>Academic</option>
+                                <option>Examination</option>
+                                <option>Fees</option>
+                                <option>Faculty</option>
+                                <option>Infrastructure</option>
+                                <option>Other</option>
+                            </select>
+                            <label>Subject</label>
+                            <input id="gs" class="form-control mb-3" placeholder="Short subject">
+                            <label>Description</label>
+                            <textarea id="gd" rows="5" class="form-control mb-3" placeholder="Describe your concern clearly"></textarea>
+                            <button class="btn st-primary w-100" onclick="submitGrievance()"><i class="bi bi-send me-1"></i>Submit Grievance</button>
+                        </div>
+                    `,'bi-pencil-square')}
+                </div>
+                <div class="col-lg-7">
+                    ${stPanel('Grievance History',`
+                        ${rows.length ? rows.map(r => `
+                            <div class="st-item">
+                                <div class="d-flex justify-content-between gap-2">
+                                    <strong>${esc(r.subject)}</strong>${badge(r.status)}
+                                </div>
+                                <small class="text-primary">${esc(r.category)}</small>
+                                <p class="small text-muted mt-2">${esc(r.description)}</p>
+                                ${r.response ? `<div class="alert alert-light small mb-0"><strong>Response:</strong> ${esc(r.response)}</div>` : ''}
+                            </div>`).join('') : stEmpty('No grievances have been submitted.','bi-chat-square-text')}
+                    `,'bi-clock-history')}
+                </div>
+            </div>
+        `);
     },
+
+
+    /* LIBRARY */
 
     async Library() {
         const [books, loans] = await Promise.all([
@@ -1117,67 +1540,143 @@ student: {
             api('/api/student/library/loans')
         ]);
 
-        $('main').innerHTML =
-            card('<h5>Available Library Books</h5>') +
-            tbl(['Accession No.', 'Title', 'Author', 'Category', 'Available Copies'],
-                books.map(b => [
-                    esc(b.accession_number), esc(b.title),
-                    esc(b.author), esc(b.category), esc(b.available_copies)
-                ])) +
-            card('<h5>My Library Loans</h5>') +
-            tbl(['Book', 'Issue Date', 'Due Date', 'Return Date', 'Status'],
+        stPage('Library Services','Explore the available library catalogue and review your book loans.','bi-book-half',`
+            <div class="row g-3 mb-3">
+                ${stStat('Books Listed',books.length,'bi-book')}
+                ${stStat('My Loans',loans.length,'bi-journal-bookmark')}
+                ${stStat('Available Copies',books.reduce((n,b) => n + (Number(b.available_copies)||0),0),'bi-bookmark-check')}
+                ${stStat('Library Status','Active','bi-building')}
+            </div>
+
+            ${stPanel('Library Catalogue',`
+                ${books.length ? `<div class="row g-3">
+                    ${books.map(b => `
+                        <div class="col-md-6 col-xl-4">
+                            <div class="st-item h-100">
+                                <div class="st-icon mb-3"><i class="bi bi-book"></i></div>
+                                <h6>${esc(b.title)}</h6>
+                                <p class="small text-muted mb-2">By ${esc(b.author)}</p>
+                                <div class="st-row"><span>Accession No.</span><strong>${esc(b.accession_number)}</strong></div>
+                                <div class="st-row"><span>Category</span><strong>${esc(b.category)}</strong></div>
+                                <div class="st-row"><span>Available Copies</span><strong>${esc(b.available_copies)}</strong></div>
+                            </div>
+                        </div>`).join('')}
+                </div>` : stEmpty('No library books are listed.','bi-book')}
+            `,'bi-collection')}
+
+            ${stPanel('My Book Loans',tbl(
+                ['Book','Issue Date','Due Date','Return Date','Status'],
                 loans.map(l => [
-                    esc(l.book), esc(l.issue_date), esc(l.due_date),
-                    esc(l.return_date), badge(l.status)
-                ]));
+                    esc(l.book),esc(l.issue_date),esc(l.due_date),
+                    esc(l.return_date),badge(l.status)
+                ])
+            ),'bi-journal-check')}
+        `);
     },
+
+
+    /* NOTIFICATIONS */
 
     async Notifications() {
         const rows = await api('/api/student/notifications');
 
-        $('main').innerHTML = tbl(
-            ['Notification', 'Date'],
-            rows.map(n => [esc(n.m), esc(n.at?.slice(0,16))])
-        );
+        stPage('Notifications','Stay informed about admission updates and important college announcements.','bi-bell',`
+            ${stPanel('Recent Notifications',`
+                ${rows.length ? `<div class="st-timeline">
+                    ${rows.map(n => `
+                        <div class="st-timeline-item">
+                            <div class="d-flex justify-content-between gap-2 flex-wrap">
+                                <strong><i class="bi bi-bell-fill text-primary me-2"></i>Portal Notification</strong>
+                                <small class="text-muted">${esc(n.at?.slice(0,16))}</small>
+                            </div>
+                            <p class="mb-0 mt-2">${esc(n.m)}</p>
+                        </div>`).join('')}
+                </div>` : stEmpty('You are all caught up. No notifications available.','bi-bell-slash')}
+            `,'bi-inbox')}
+        `);
     },
+
+
+    /* STATUS - EXISTING PAGE */
 
     async Status() {
         const a = await api('/api/student/application');
 
-        $('main').innerHTML =
-            card(`Current Application Status: ${badge(a.status)}`) +
-            tbl(['Status', 'Note', 'Date'],
-                a.history.map(h => [
-                    badge(h.status), esc(h.note), esc(h.at?.slice(0,16))
-                ]));
+        stPage('Application Status','Track the progress of your admission application.','bi-clipboard-check',`
+            ${stPanel('Current Application Status',`
+                <h4>${badge(a.status)}</h4>
+                <p class="text-muted small">Application Number: ${esc(a.app_no)}</p>
+            `,'bi-info-circle')}
+            ${stPanel('Status History',`
+                ${(a.history || []).length ? `<div class="st-timeline">
+                    ${a.history.map(h => `
+                        <div class="st-timeline-item">
+                            <strong>${badge(h.status)}</strong>
+                            <p class="small mt-2 mb-1">${esc(h.note)}</p>
+                            <small class="text-muted">${esc(h.at?.slice(0,16))}</small>
+                        </div>`).join('')}
+                </div>` : stEmpty('No application history available.')}
+            `,'bi-clock-history')}
+        `);
     },
 
+
+    /* MERIT & SEAT */
+
     async 'Merit & Seat'() {
-        const [a, s] = await Promise.all([
+        const [a,s] = await Promise.all([
             api('/api/student/application'),
             api('/api/student/allocation')
         ]);
 
-        $('main').innerHTML =
-            card(`<h5>Merit Details</h5>
-                <p>Rank: <b>${esc(a.rank ?? 'Not published')}</b></p>
-                <p>Merit Score: <b>${esc(a.merit_score ?? '-')}</b></p>`) +
-            card(s
-                ? `<h5>Seat Allocation</h5>
-                   <p>Course: ${esc(s.course)}</p>
-                   <p>Status: ${badge(s.status)}</p>
-                   <p>Register No: ${esc(s.register_no || '-')}</p>
-                   ${s.status === 'Offered'
-                     ? `<button class="btn btn-success" onclick="respondSeat('accept')">Accept</button>
-                        <button class="btn btn-danger" onclick="respondSeat('decline')">Decline</button>`
-                     : ''}`
-                : 'No seat allocated yet.');
+        stPage('Merit & Seat Allocation','Review your merit details and admission seat allocation status.','bi-trophy',`
+            <div class="row g-3 mb-3">
+                ${stStat('Merit Rank',a.rank ?? 'Not published','bi-award')}
+                ${stStat('Merit Score',a.merit_score ?? '—','bi-graph-up')}
+                ${stStat('Application Status',a.status || '—','bi-clipboard-check')}
+                ${stStat('Seat Status',s?.status || 'Awaiting','bi-mortarboard')}
+            </div>
+
+            ${stPanel('Merit Information',`
+                <div class="st-ticket">
+                    <div class="row">
+                        <div class="col-7">
+                            <small class="text-muted">YOUR MERIT RANK</small>
+                            <h2 class="fw-bold text-primary">${esc(a.rank ?? '—')}</h2>
+                        </div>
+                        <div class="col-5 text-end">
+                            <i class="bi bi-trophy-fill display-3 text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="st-row"><span>Merit Score</span><strong>${esc(a.merit_score ?? 'Not published')}</strong></div>
+                    <div class="st-row"><span>Application Number</span><strong>${esc(a.app_no || '—')}</strong></div>
+                </div>
+            `,'bi-bar-chart')}
+
+            ${stPanel('Seat Allocation Details',`
+                ${s ? `
+                    <div class="st-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Seat Allocation</h5>${badge(s.status)}
+                        </div>
+                        <div class="st-row"><span>Allocated Course</span><strong>${esc(s.course)}</strong></div>
+                        <div class="st-row"><span>Register Number</span><strong>${esc(s.register_no || 'Not allotted')}</strong></div>
+                        ${s.status === 'Offered' ? `
+                            <div class="alert alert-primary mt-3">A seat has been offered. Please submit your response.</div>
+                            <button class="btn btn-success me-2" onclick="respondSeat('accept')"><i class="bi bi-check-circle me-1"></i>Accept Seat</button>
+                            <button class="btn btn-danger" onclick="respondSeat('decline')"><i class="bi bi-x-circle me-1"></i>Decline Seat</button>
+                        ` : ''}
+                    </div>
+                ` : stEmpty('No seat has been allocated yet.','bi-mortarboard')}
+            `,'bi-building')}
+        `);
     }
+
 },
 
 
 /* =====================================================
-   FACULTY PORTAL - EXISTING ADMISSION REVIEW
+   FACULTY PORTAL - EXISTING FUNCTIONALITY
 ===================================================== */
 
 faculty: {
@@ -1297,9 +1796,8 @@ admin: {
 ===================================================== */
 
 function openStudentPage(page) {
-    const button = Array.from(
-        document.querySelectorAll('#nav .btn')
-    ).find(item => item.textContent.trim().includes(page));
+    const button = Array.from(document.querySelectorAll('#nav .btn'))
+        .find(item => item.textContent.trim().endsWith(page));
 
     if (button) {
         go(page, button);
