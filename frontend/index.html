@@ -1,69 +1,428 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>College ERP | Admission Management</title>
+<title>College ERP Portal</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
 <style>
 :root {
-    --navy: #14243c;
-    --blue: #2563eb;
-    --background: #f4f7fb;
+    --navy: #203D78;
+    --blue: #315fbd;
+    --light: #f3f6fc;
 }
-
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
-    background: var(--background);
-    font-family: Arial, sans-serif;
-    color: #263449;
+    min-height: 100vh;
+    background: var(--light);
+    color: #1d2b45;
+    font-family: Inter, Arial, sans-serif;
 }
 
+/* LOGIN LAYOUT */
 #auth {
-    max-width: 460px;
+    width: min(1120px, calc(100% - 40px));
+    max-width: 1120px;
+    min-height: 650px;
+    margin: 5vh auto;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    border-radius: 22px;
+    background: white;
+    box-shadow: 0 25px 70px rgba(30,53,100,.15);
 }
 
-.login-logo {
-    width: 65px;
-    height: 65px;
-    border-radius: 18px;
-    background: var(--navy);
+/* LEFT BRAND PANEL */
+.brand-panel {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 48px;
     color: white;
+    background: linear-gradient(145deg,#294b91,#203d78 55%,#172f63);
+}
+
+.brand-panel::before,
+.brand-panel::after {
+    content: "";
+    position: absolute;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.brand-panel::before {
+    width: 440px;
+    height: 440px;
+    right: -220px;
+    top: 100px;
+    box-shadow: 0 0 0 35px rgba(255,255,255,.025),
+                0 0 0 75px rgba(255,255,255,.025);
+}
+
+.brand-panel::after {
+    width: 270px;
+    height: 270px;
+    left: -175px;
+    bottom: -90px;
+    box-shadow: 0 0 0 30px rgba(255,255,255,.025);
+}
+
+.brand-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.brand-icon {
+    width: 52px;
+    height: 52px;
     display: grid;
     place-items: center;
-    font-size: 30px;
-    margin: auto auto 15px;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 15px;
+    background: rgba(255,255,255,.12);
+    font-size: 27px;
 }
 
-.login-card {
+.brand-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: .09em;
+}
+
+.brand-subtitle {
+    display: block;
+    margin-top: 5px;
+    color: rgba(255,255,255,.7);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .12em;
+}
+
+.brand-copy {
+    position: relative;
+    z-index: 1;
+    padding: 50px 0;
+}
+
+.brand-eyebrow {
+    margin-bottom: 20px;
+    color: #c9d6ff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+}
+
+.brand-copy h1 {
+    margin: 0 0 22px;
+    font-size: clamp(34px,4vw,47px);
+    line-height: 1.18;
+    font-weight: 700;
+    letter-spacing: -.04em;
+}
+
+.brand-copy h1 span {
+    display: block;
+    color: #c8c9ff;
+}
+
+.brand-copy p {
+    max-width: 360px;
+    color: rgba(255,255,255,.75);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.brand-bottom {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255,255,255,.16);
+    color: rgba(255,255,255,.7);
+    font-size: 10px;
+}
+
+.brand-bottom strong {
+    color: white;
+    font-size: 9px;
+    letter-spacing: .12em;
+}
+
+/* RIGHT LOGIN PANEL */
+.login-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 45px clamp(30px,5vw,65px);
+    background: white;
+}
+
+.portal-status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 28px;
+    color: #66738b;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .15em;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #24b47e;
+    box-shadow: 0 0 0 4px rgba(36,180,126,.12);
+}
+
+.login-heading { margin-bottom: 25px; }
+
+.login-heading h2 {
+    margin: 0 0 9px;
+    font-size: 31px;
+    font-weight: 700;
+    letter-spacing: -.04em;
+}
+
+.login-heading p {
+    margin: 0;
+    color: #8791a4;
+    font-size: 13px;
+}
+
+/* ROLE BUTTONS */
+.role-switch {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 7px;
+    margin-bottom: 24px;
+    padding: 5px;
+    border: 1px solid #e8edf5;
+    border-radius: 12px;
+    background: #f7f9fd;
+}
+
+.role-button {
+    min-height: 45px;
     border: 0;
-    border-radius: 14px;
-    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    border-radius: 9px;
+    background: transparent;
+    color: #52627e;
+    font-size: 12px;
+    font-weight: 600;
+    transition: .2s;
 }
 
-/* MAIN APPLICATION LAYOUT */
+.role-button i {
+    margin-right: 5px;
+    font-size: 14px;
+}
 
-#app {
-    min-height: 100vh;
+.role-button:hover {
+    background: #edf2fc;
+    color: var(--navy);
+}
+
+.role-button.active {
+    color: white;
+    background: linear-gradient(135deg,#315fbd,#4779e6);
+    box-shadow: 0 5px 12px rgba(49,95,189,.2);
+}
+
+/* KEEP EXISTING JS TARGET */
+#ttl { display: none; }
+
+#msg {
+    min-height: 0;
+    margin: 0 0 10px;
+    color: #c0394b;
+    font-size: 12px;
+}
+
+#msg:empty { display: none; }
+
+.field-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #34425c;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.login-field { margin-bottom: 17px; }
+
+.login-input {
     width: 100%;
+    height: 49px;
+    padding: 0 14px;
+    border: 1px solid #e0e6f0;
+    border-radius: 9px;
+    outline: none;
+    background: white;
+    color: #24334e;
+    font-size: 13px;
 }
 
-#app:not(.d-none) {
-    display: flex !important;
+.login-input::placeholder { color: #aab3c2; }
+
+.login-input:focus {
+    border-color: #6b91df;
+    box-shadow: 0 0 0 3px rgba(71,121,230,.12);
 }
 
-/* LEFT SIDEBAR */
+.password-wrap { position: relative; }
+
+.password-wrap .login-input { padding-right: 48px; }
+
+.password-toggle {
+    position: absolute;
+    top: 0;
+    right: 4px;
+    width: 42px;
+    height: 49px;
+    border: 0;
+    background: transparent;
+    color: #8793a8;
+    font-size: 17px;
+}
+
+#regf { margin-top: 2px; }
+
+#regf input, #regf select {
+    width: 100%;
+    min-height: 44px;
+    margin-bottom: 10px;
+    border: 1px solid #e0e6f0;
+    border-radius: 9px;
+    font-size: 12px;
+}
+
+.remember-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin: 2px 0 20px;
+}
+
+.remember-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #77839a;
+    font-size: 11px;
+}
+
+.remember-label input { accent-color: var(--blue); }
+
+.secure-label {
+    color: #8390a5;
+    font-size: 10px;
+}
+
+.secure-label i {
+    color: #20a477;
+    margin-right: 4px;
+}
+
+/* SIGN IN */
+.signin-button {
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 11px;
+    border: 0;
+    border-radius: 9px;
+    background: linear-gradient(110deg,#2d58ad,#477ce8);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 8px 18px rgba(49,95,189,.2);
+    transition: .2s;
+}
+
+.signin-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 11px 22px rgba(49,95,189,.27);
+}
+
+.auth-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 18px;
+    color: #9aa4b5;
+    font-size: 11px;
+}
+
+.auth-links a {
+    color: #315fbd;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-links a:hover { text-decoration: underline; }
+
+#rl { display: inline !important; }
+
+.help-box {
+    display: flex;
+    gap: 11px;
+    align-items: flex-start;
+    margin-top: 27px;
+    padding: 14px 15px;
+    border: 1px solid #e9edf4;
+    border-radius: 10px;
+    background: #f8f9fc;
+    color: #8792a5;
+    font-size: 10px;
+    line-height: 1.65;
+}
+
+.help-box i {
+    color: #607eb8;
+    font-size: 16px;
+}
+
+.login-footer {
+    margin-top: 22px;
+    color: #a4adbb;
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: .05em;
+}
+
+/* EXISTING PORTAL STYLES */
+#app { min-height: 100vh; width: 100%; }
+
+#app:not(.d-none) { display: flex !important; }
 
 #side {
-    background: var(--navy);
+    background: #14243c;
     color: #dbe5f3;
     width: 260px;
     min-width: 260px;
@@ -75,204 +434,251 @@ body {
     padding: 22px 16px;
 }
 
-.brand {
-    font-size: 19px;
-    font-weight: bold;
-    color: white;
-}
+.brand { font-size: 19px; font-weight: bold; color: white; }
+.brand small { display: block; font-size: 11px; color: #a9bbd4; font-weight: normal; margin-top: 4px; }
+.profile-box { background: rgba(255,255,255,.08); padding: 13px; border-radius: 10px; margin: 24px 0 20px; overflow-wrap: anywhere; }
+#side .btn { color: #cbd5e1; text-align: left; width: 100%; border: 0; border-radius: 8px; padding: 11px 13px; font-size: 14px; }
+#side .btn:hover, #side .btn.on { background: #2563eb; color: white; }
+#side .btn i { margin-right: 10px; }
+#content { min-width: 0; flex: 1; }
+.topbar { background: white; padding: 16px 25px; border-bottom: 1px solid #e5eaf1; display: flex; justify-content: space-between; align-items: center; min-height: 70px; }
+.page-area { padding: 25px; }
+#ph { font-size: 23px; font-weight: 700; margin-bottom: 20px; }
+#main { width: 100%; min-width: 0; }
+.card { border: 0; border-radius: 12px; box-shadow: 0 2px 10px rgba(25,40,70,.06); }
+.table { background: white; border-radius: 10px; }
+.form-control, .form-select { border-radius: 8px; }
 
-.brand small {
-    display: block;
-    font-size: 11px;
-    color: #a9bbd4;
-    font-weight: normal;
-    margin-top: 4px;
-}
-
-.profile-box {
-    background: rgba(255,255,255,.08);
-    padding: 13px;
-    border-radius: 10px;
-    margin: 24px 0 20px;
-    overflow-wrap: anywhere;
-}
-
-#side .btn {
-    color: #cbd5e1;
-    text-align: left;
-    width: 100%;
-    border: 0;
-    border-radius: 8px;
-    padding: 11px 13px;
-    font-size: 14px;
-    transition: background .2s;
-}
-
-#side .btn:hover,
-#side .btn.on {
-    background: var(--blue);
-    color: white;
-}
-
-#side .btn i {
-    margin-right: 10px;
-}
-
-/* RIGHT CONTENT */
-
-#content {
-    min-width: 0;
-    flex: 1;
-}
-
-.topbar {
-    background: white;
-    padding: 16px 25px;
-    border-bottom: 1px solid #e5eaf1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 70px;
-}
-
-.page-area {
-    padding: 25px;
-}
-
-#ph {
-    font-size: 23px;
-    font-weight: 700;
-    margin-bottom: 20px;
-}
-
-#main {
-    width: 100%;
-    min-width: 0;
-}
-
-.card {
-    border: 0;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(25,40,70,.06);
-}
-
-.table {
-    background: white;
-    border-radius: 10px;
-}
-
-.form-control,
-.form-select {
-    border-radius: 8px;
-}
-
-.btn {
-    border-radius: 8px;
-}
-
-/* MOBILE RESPONSIVE */
-
-@media(max-width: 768px) {
-    #app:not(.d-none) {
-        display: flex !important;
-        flex-direction: column;
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    #auth {
+        width: calc(100% - 32px);
+        grid-template-columns: .85fr 1.15fr;
     }
+    .brand-panel { padding: 38px 30px 28px; }
+    .login-panel { padding: 38px 32px 28px; }
+    .brand-copy h1 { font-size: 36px; }
+}
 
-    #side {
-        width: 100%;
-        min-width: 0;
-        height: auto;
-        min-height: auto;
-        position: relative;
-        padding: 16px;
+@media (max-width: 650px) {
+    #auth {
+        width: calc(100% - 24px);
+        min-height: 0;
+        margin: 12px auto;
+        grid-template-columns: 1fr;
+        border-radius: 17px;
     }
-
-    #nav {
-        display: grid !important;
-        grid-template-columns: repeat(2, minmax(0,1fr));
-    }
-
-    #content {
-        width: 100%;
-    }
-
-    .page-area {
-        padding: 15px;
-    }
-
-    .topbar {
-        padding: 14px;
-    }
+    .brand-panel { min-height: 270px; padding: 25px; }
+    .brand-icon { width: 44px; height: 44px; font-size: 23px; }
+    .brand-copy { padding: 30px 0 25px; }
+    .brand-copy h1 { font-size: 30px; }
+    .brand-copy p { font-size: 12px; }
+    .brand-bottom { padding-top: 14px; }
+    .login-panel { padding: 30px 24px 25px; }
+    .login-heading h2 { font-size: 27px; }
+    #app:not(.d-none) { display: flex !important; flex-direction: column; }
+    #side { width: 100%; min-width: 0; height: auto; min-height: auto; position: relative; padding: 16px; }
+    #nav { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)); }
+    #content { width: 100%; }
+    .page-area { padding: 15px; }
+    .topbar { padding: 14px; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN PORTAL -->
+<!-- LOGIN PAGE -->
+<div id="auth">
 
-<div id="auth" class="container py-5">
+    <section class="brand-panel">
 
-    <div class="text-center mb-4">
-        <div class="login-logo">
-            <i class="bi bi-mortarboard-fill"></i>
+        <div class="brand-top">
+            <div class="brand-icon">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+
+            <div>
+                <p class="brand-name">COLLEGE ERP PORTAL</p>
+                <span class="brand-subtitle">
+                    INTEGRATED COLLEGE MANAGEMENT SYSTEM
+                </span>
+            </div>
         </div>
 
-        <h3 class="fw-bold">College ERP Portal</h3>
-        <p class="text-muted">Integrated College Management System</p>
-    </div>
+        <div class="brand-copy">
+            <div class="brand-eyebrow">
+                ONE CAMPUS. ONE CONNECTED EXPERIENCE.
+            </div>
 
-    <div class="btn-group w-100 mb-3">
-        <button class="btn btn-outline-primary" onclick="setRole('student')">
-            <i class="bi bi-person"></i> Student
-        </button>
+            <h1>
+                Everything your campus needs.
+                <span>In one place.</span>
+            </h1>
 
-        <button class="btn btn-outline-primary" onclick="setRole('faculty')">
-            <i class="bi bi-person-workspace"></i> Faculty
-        </button>
+            <p>
+                A smarter way to connect students, faculty and campus administration.
+            </p>
+        </div>
 
-        <button class="btn btn-outline-primary" onclick="setRole('admin')">
-            <i class="bi bi-shield-lock"></i> Admin
-        </button>
-    </div>
+        <div class="brand-bottom">
+            <span>Designed for a connected campus.</span>
+            <strong>COLLEGE ERP</strong>
+        </div>
 
-    <div class="card login-card p-4">
-        <h5 id="ttl" class="fw-bold mb-3"></h5>
+    </section>
 
-        <div id="msg" class="text-danger small mb-2"></div>
+    <section class="login-panel">
 
-        <label class="form-label">Email</label>
-        <input id="email" type="text" class="form-control mb-3"
-               placeholder="Enter your email">
+        <div class="portal-status">
+            <span class="status-dot"></span>
+            CAMPUS PORTAL
+        </div>
 
-        <label class="form-label">Password</label>
-        <input id="pw" type="password" class="form-control mb-3"
-               placeholder="Enter password">
+        <div class="login-heading">
+            <h2>Welcome back.</h2>
+            <p>Sign in to continue to your workspace.</p>
+        </div>
 
+        <!-- ROLE SELECTION -->
+        <div class="role-switch">
+
+            <button type="button"
+                    class="role-button active"
+                    data-role="student"
+                    onclick="setRole('student')">
+                <i class="bi bi-person"></i>Student
+            </button>
+
+            <button type="button"
+                    class="role-button"
+                    data-role="faculty"
+                    onclick="setRole('faculty')">
+                <i class="bi bi-person-workspace"></i>Faculty
+            </button>
+
+            <button type="button"
+                    class="role-button"
+                    data-role="admin"
+                    onclick="setRole('admin')">
+                <i class="bi bi-shield-lock"></i>Admin
+            </button>
+
+        </div>
+
+        <!-- KEEP EXISTING JAVASCRIPT ID -->
+        <h5 id="ttl">Student Login</h5>
+
+        <div id="msg" role="alert" aria-live="polite"></div>
+
+        <div class="login-field">
+
+            <label class="field-label" for="email">
+                EMAIL ADDRESS
+            </label>
+
+            <input
+                id="email"
+                type="email"
+                class="login-input"
+                placeholder="Enter your college email"
+                autocomplete="username"
+            >
+
+        </div>
+
+        <div class="login-field">
+
+            <label class="field-label" for="pw">
+                PASSWORD
+            </label>
+
+            <div class="password-wrap">
+
+                <input
+                    id="pw"
+                    type="password"
+                    class="login-input"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                >
+
+                <button
+                    type="button"
+                    class="password-toggle"
+                    id="pwToggle"
+                    aria-label="Show password"
+                    onclick="togglePassword()"
+                >
+                    <i class="bi bi-eye"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- REGISTRATION FIELDS ARE GENERATED BY EXISTING JS -->
         <div id="regf"></div>
 
-        <button class="btn btn-primary w-100 py-2" onclick="login()">
-            Login / Register
+        <div class="remember-row" id="rememberRow">
+
+            <label class="remember-label">
+                <input type="checkbox" id="rememberEmail">
+                Remember email
+            </label>
+
+            <span class="secure-label">
+                <i class="bi bi-shield-lock-fill"></i>
+                Secure sign-in
+            </span>
+
+        </div>
+
+        <button
+            type="button"
+            class="signin-button"
+            id="loginBtn"
+            onclick="login()"
+        >
+            <span id="loginBtnText">Sign in to portal</span>
+            <i class="bi bi-arrow-right"></i>
         </button>
 
-        <a href="#" id="rl" class="small mt-3 d-block text-center"
-           onclick="toggleReg()">Register / Login</a>
+        <div class="auth-links">
 
-        <a href="#" class="small mt-2 d-block text-center"
-           onclick="forgot()">Forgot password?</a>
-    </div>
+            <span id="registerPrompt">New to the portal?</span>
 
-    <p class="text-center text-muted small mt-4">
-        © College ERP Management System
-    </p>
+            <a href="#" id="rl" onclick="toggleReg(); return false;">
+                Create an account
+            </a>
+
+            <span id="authLinkDivider">·</span>
+
+            <a href="#" id="forgotLink" onclick="forgot(); return false;">
+                Forgot password?
+            </a>
+
+        </div>
+
+        <div class="help-box">
+            <i class="bi bi-info-circle"></i>
+
+            <span>
+                Access is provided by your institution.
+                Contact the portal administrator if you need assistance.
+            </span>
+        </div>
+
+        <div class="login-footer">
+            © 2026 COLLEGE ERP MANAGEMENT SYSTEM.
+        </div>
+
+    </section>
+
 </div>
 
-
-<!-- APPLICATION PORTAL -->
-
+<!-- EXISTING APPLICATION PORTAL -->
 <div id="app" class="d-none">
-
-    <!-- LEFT SIDEBAR -->
 
     <aside id="side">
 
@@ -295,18 +701,17 @@ body {
 
         <hr class="border-secondary">
 
-        <button class="btn" onclick="api('/api/auth/logout','POST').then(()=>location.reload())">
+        <button class="btn"
+            onclick="api('/api/auth/logout','POST').then(()=>location.reload())">
             <i class="bi bi-box-arrow-left"></i> Logout
         </button>
 
     </aside>
 
-
-    <!-- RIGHT MAIN CONTENT -->
-
     <div id="content">
 
         <header class="topbar">
+
             <div>
                 <span class="fw-bold">College Management</span>
                 <div class="small text-muted">Dashboard / Portal</div>
@@ -316,6 +721,7 @@ body {
                 <i class="bi bi-shield-check text-success"></i>
                 Secure Portal
             </div>
+
         </header>
 
         <main class="page-area">
@@ -336,4 +742,3 @@ body {
 
 </body>
 </html>
-```
