@@ -15,7 +15,10 @@ exports.oneOf = (v, list, name, optional = false) => {
   return v;
 };
 exports.int = (v, name, { min = 0, max = 1e9, optional = false } = {}) => {
-  if (empty(v) && optional) return null;
+  if (empty(v)) {
+    if (optional) return null;
+    bad(`${name} is required.`);
+  }
   const n = Number(v);
   if (!Number.isInteger(n) || n < min || n > max) bad(`${name} must be a whole number between ${min} and ${max}.`);
   return n;
@@ -28,7 +31,12 @@ exports.dateTime = (v, name) => {
   return s;
 };
 exports.date = (v, name) => {
-  if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v) || isNaN(new Date(v + 'T00:00:00'))) bad(`${name} must be a valid date (YYYY-MM-DD).`);
+  if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v)) bad(`${name} must be a valid date (YYYY-MM-DD).`);
+  const [year, month, day] = v.split('-').map(Number);
+  const d = new Date(Date.UTC(year, month - 1, day));
+  if (d.getUTCFullYear() !== year || d.getUTCMonth() !== month - 1 || d.getUTCDate() !== day) {
+    bad(`${name} must be a valid date (YYYY-MM-DD).`);
+  }
   return v;
 };
 exports.phone = (v, name, optional = false) => {
