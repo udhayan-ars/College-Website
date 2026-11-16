@@ -33,8 +33,19 @@ const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({
 
 const card = html => `<div class="card p-3 mb-3">${html}</div>`;
 
-const badge = value =>
-    `<span class="badge bg-primary">${esc(value || 'N/A')}</span>`;
+const badge = value => {
+    const v = String(value || 'N/A');
+    const lower = v.toLowerCase();
+    const color = lower.includes('approv') || lower.includes('paid') ||
+        lower.includes('eligible') || lower.includes('accept') ||
+        lower.includes('issued') ? 'success' :
+        lower.includes('reject') || lower.includes('declin') ||
+        lower.includes('fail') ? 'danger' :
+        lower.includes('pending') || lower.includes('review') ||
+        lower.includes('process') ? 'warning' : 'primary';
+
+    return `<span class="badge text-bg-${color}">${esc(v)}</span>`;
+};
 
 const tbl = (headers, rows) => `
 <div class="table-responsive">
