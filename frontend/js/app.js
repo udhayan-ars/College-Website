@@ -1779,19 +1779,40 @@ async function reviewApplication(id) {
 }
 
 
-async function verifyDocument(id,status,appId) {
+async function verifyDocument(id, status, appId) {
     let reason = null;
 
     if (status === 'Rejected') {
-        reason = prompt('Enter rejection reason');
-        if (!reason) return;
+        const input = prompt('Enter rejection reason:');
+
+        if (input === null) return;
+
+        reason = input.trim();
+
+        if (!reason) {
+            alert('Rejection reason cannot be empty.');
+            return;
+        }
     }
 
-    await api(`/api/faculty/documents/${id}/verify`,'POST',{
-        status,reason
-    });
+    const confirmed = confirm(
+        `Are you sure you want to ${status.toLowerCase()} this document?`
+    );
 
-    reviewApplication(appId);
+    if (!confirmed) return;
+
+    try {
+        await api(`/api/faculty/documents/${id}/verify`, 'POST', {
+            status,
+            reason
+        });
+
+        alert(`Document ${status.toLowerCase()} successfully.`);
+        await reviewApplication(appId);
+
+    } catch (error) {
+        console.error('Document verification failed:', error);
+    }
 }
 
 
