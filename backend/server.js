@@ -38,6 +38,7 @@ app.get('/api/health', async (req, res) => {
   catch (e) { res.status(503).json({ status: 'error', database: 'unreachable' }); }
 });
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/portal', require('./routes/portal'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/students', require('./routes/students'));
 app.use('/api/rooms', require('./routes/rooms'));
@@ -49,11 +50,17 @@ app.use('/api/emergencies', require('./routes/emergencies'));
 app.use('/api', require('./routes/content'));
 app.use('/api', notFound);
 
-// Serve the existing frontend (same origin, so the secure cookie works without CORS)
+// The institution portal is the entry point. Existing workspaces remain separate.
+const portalAuth = require('./middleware/portalAuth').authenticatePortal;
+const projectRoot = path.join(__dirname, '..');
+app.use('/hostel', express.static(path.join(__dirname, '..', 'frontend', 'hostel')));
+app.use('/admission', portalAuth, express.static(path.join(projectRoot, 'admission')));
+app.use('/modules/campustrack', portalAuth, express.static(path.join(projectRoot, 'modules', 'campustrack')));
+app.use('/modules/canteen_management', portalAuth, express.static(path.join(projectRoot, 'modules', 'canteen_management')));
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 app.use(errorHandler);
 
 const port = Number(process.env.PORT) || 3000;
 pool.query('SELECT 1').then(() => {
-  app.listen(port, () => console.log(`Smart Hostel running at http://localhost:${port}`));
+  app.listen(port, () => console.log(`NEXORA Portal running at http://localhost:${port}`));
 }).catch(e => { console.error('Database connection failed:', e.message); process.exit(1); });
