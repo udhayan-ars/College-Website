@@ -552,26 +552,258 @@ student: {
         `;
     },
 
+    /* PROFILE & ID - REDESIGNED UI */
+
     async 'Profile & ID'() {
         const p = await api('/api/student/profile');
 
-        $('main').innerHTML = card(`
-            <div class="text-center mb-3">
-                <i class="bi bi-person-circle display-1 text-primary"></i>
-                <h4>${esc(p.name)}</h4>
-                <p class="text-muted">Student Digital Profile</p>
+        const name = p.name || U.name || 'Student';
+        const initial = name.trim().charAt(0).toUpperCase();
+
+        $('main').innerHTML = `
+            <style>
+                .profile-wrap {
+                    color: #20304b;
+                    width: 100%;
+                }
+
+                .profile-header {
+                    background: linear-gradient(115deg,#203d78,#315fbd);
+                    color: white;
+                    padding: 28px;
+                    border-radius: 17px;
+                    margin-bottom: 22px;
+                    display: flex;
+                    align-items: center;
+                    gap: 22px;
+                    flex-wrap: wrap;
+                    box-shadow: 0 6px 20px rgba(32,61,120,.12);
+                }
+
+                .profile-avatar {
+                    width: 85px;
+                    height: 85px;
+                    min-width: 85px;
+                    border-radius: 50%;
+                    background: white;
+                    color: #203d78;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 36px;
+                    font-weight: 700;
+                    border: 4px solid #dce7ff;
+                }
+
+                .profile-header h3 {
+                    font-weight: 700;
+                    margin-bottom: 5px;
+                }
+
+                .profile-header p {
+                    color: #e0e9ff;
+                    margin-bottom: 4px;
+                }
+
+                .profile-id {
+                    margin-left: auto;
+                    background: rgba(255,255,255,.13);
+                    border: 1px solid rgba(255,255,255,.25);
+                    padding: 13px 18px;
+                    border-radius: 12px;
+                    min-width: 150px;
+                }
+
+                .profile-id small {
+                    display: block;
+                    color: #dce7ff;
+                    margin-bottom: 5px;
+                }
+
+                .profile-id strong {
+                    font-size: 17px;
+                    overflow-wrap: anywhere;
+                }
+
+                .profile-section {
+                    background: white;
+                    border: 1px solid #e6ebf3;
+                    border-radius: 15px;
+                    padding: 22px;
+                    margin-bottom: 18px;
+                    box-shadow: 0 5px 20px rgba(25,40,70,.04);
+                }
+
+                .profile-section-title {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    color: #203d78;
+                    font-weight: 700;
+                    font-size: 17px;
+                    padding-bottom: 15px;
+                    border-bottom: 1px solid #edf0f5;
+                    margin-bottom: 8px;
+                }
+
+                .profile-section-title i {
+                    font-size: 21px;
+                }
+
+                .profile-detail {
+                    padding: 14px 5px;
+                    border-bottom: 1px solid #edf0f5;
+                    min-height: 72px;
+                }
+
+                .profile-detail small {
+                    display: block;
+                    color: #8791a4;
+                    margin-bottom: 6px;
+                }
+
+                .profile-detail strong {
+                    color: #263754;
+                    overflow-wrap: anywhere;
+                    font-size: 14px;
+                }
+
+                .profile-detail i {
+                    color: #315fbd;
+                    margin-right: 6px;
+                }
+
+                @media(max-width:600px) {
+                    .profile-header {
+                        padding: 20px;
+                        gap: 14px;
+                    }
+
+                    .profile-avatar {
+                        width: 65px;
+                        height: 65px;
+                        min-width: 65px;
+                        font-size: 27px;
+                    }
+
+                    .profile-header h3 {
+                        font-size: 20px;
+                    }
+
+                    .profile-id {
+                        margin-left: 0;
+                        width: 100%;
+                    }
+
+                    .profile-section {
+                        padding: 16px;
+                    }
+                }
+            </style>
+
+            <div class="profile-wrap">
+
+                <section class="profile-header">
+                    <div class="profile-avatar">${esc(initial)}</div>
+
+                    <div>
+                        <p class="small mb-1">STUDENT PROFILE</p>
+                        <h3>${esc(name)}</h3>
+                        <p>
+                            <i class="bi bi-mortarboard-fill me-1"></i>
+                            ${esc(p.department || 'Department not assigned')}
+                        </p>
+                    </div>
+
+                    <div class="profile-id">
+                        <small>STUDENT ID</small>
+                        <strong>${esc(p.student_code || 'Not allotted')}</strong>
+                    </div>
+                </section>
+
+                <section class="profile-section">
+                    <div class="profile-section-title">
+                        <i class="bi bi-person-vcard"></i>
+                        Personal Information
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile-detail">
+                                <small><i class="bi bi-person"></i> Full Name</small>
+                                <strong>${esc(p.name || 'Not provided')}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="profile-detail">
+                                <small><i class="bi bi-envelope"></i> Email Address</small>
+                                <strong>${esc(p.email || 'Not provided')}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="profile-detail">
+                                <small><i class="bi bi-telephone"></i> Mobile Number</small>
+                                <strong>${esc(p.mobile || 'Not provided')}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="profile-detail">
+                                <small><i class="bi bi-calendar"></i> Date of Birth</small>
+                                <strong>${esc(p.dob || 'Not provided')}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="profile-detail">
+                                <small><i class="bi bi-gender-ambiguous"></i> Gender</small>
+                                <strong>${esc(p.gender || 'Not provided')}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="profile-section">
+                    <div class="profile-section-title">
+                        <i class="bi bi-mortarboard"></i>
+                        Academic Information
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile-detail">
+                                <small><i class="bi bi-card-heading"></i> Register Number</small>
+                                <strong>${esc(p.register_no || 'Not allotted')}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="profile-detail">
+                                <small><i class="bi bi-building"></i> Department</small>
+                                <strong>${esc(p.department || 'Not assigned')}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="profile-detail">
+                                <small><i class="bi bi-book"></i> Course</small>
+                                <strong>${esc(p.course || 'Not allotted')}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="profile-detail">
+                                <small><i class="bi bi-person-badge"></i> Student Code</small>
+                                <strong>${esc(p.student_code || 'Not allotted')}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
             </div>
-            ${tbl(['Field', 'Details'], [
-                ['Student ID', esc(p.student_code)],
-                ['Register Number', esc(p.register_no || 'Not allotted')],
-                ['Email', esc(p.email)],
-                ['Mobile', esc(p.mobile)],
-                ['Date of Birth', esc(p.dob)],
-                ['Gender', esc(p.gender)],
-                ['Department', esc(p.department)],
-                ['Course', esc(p.course || 'Not allotted')]
-            ])}
-        `);
+        `;
     },
 
     async Application() {
