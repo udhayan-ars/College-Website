@@ -1,42 +1,30 @@
 
-// ==========================================
 // CampusTrack - Login Authentication
 // Supabase Integration
-// ==========================================
 
-
-// 1. Supabase Configuration
-console.log("Supabase Client:", supabaseClient);
-
-async function testSupabaseConnection() {
-    const { data, error } = await supabaseClient
-        .from("students")
-        .select("*")
-        .limit(1);
-
-    if (error) {
-        console.error("Supabase Error:", error.message);
-    } else {
-        console.log("Supabase Connected Successfully! 🚀");
-        console.log(data);
-    }
-}
-
-testSupabaseConnection();
 const SUPABASE_URL = "https://lbavigzrgdkbxsxamoty.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_CFhHp87e9yJ8loaDJ7f3eg_Axattwgj";
+const SUPABASE_KEY = "sb_publishable_CFhHp87e9yJ8loaDJ7f3eg_Axattwgj";
 
 // Initialize Supabase
+if (!window.supabase) {
+    throw new Error("Supabase library not loaded. Check your HTML script order.");
+}
 
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+    SUPABASE_KEY,
+    {
+        auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+        }
+    }
 );
 
+console.log("Supabase initialized successfully!");
 
-// 2. Get HTML Elements
-
+// Get HTML Elements
 const loginForm = document.getElementById("loginForm");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
@@ -45,44 +33,39 @@ const loginButton = document.getElementById("loginButton");
 const message = document.getElementById("message");
 const forgotPassword = document.getElementById("forgotPassword");
 
+// Check required elements
+if (
+    !loginForm ||
+    !emailInput ||
+    !passwordInput ||
+    !selectedRoleInput ||
+    !loginButton ||
+    !message ||
+    !forgotPassword
+) {
+    throw new Error("Some login HTML elements are missing. Check their IDs.");
+}
 
-// 3. Role Selection
-
+// Role Selection
 const roleButtons = document.querySelectorAll(".role-btn");
 
 roleButtons.forEach((button) => {
-
     button.addEventListener("click", () => {
-
-        roleButtons.forEach((btn) => {
-            btn.classList.remove("active");
-        });
-
+        roleButtons.forEach((btn) => btn.classList.remove("active"));
         button.classList.add("active");
-
         selectedRoleInput.value = button.dataset.role;
-
     });
-
 });
 
-
-// 4. Display Messages
-
+// Display Messages
 function showMessage(text, type = "error") {
-
     message.textContent = text;
-
     message.style.color =
         type === "success" ? "#16a34a" : "#dc2626";
-
 }
 
-
-// 5. Login Authentication
-
+// Login Authentication
 loginForm.addEventListener("submit", async (event) => {
-
     event.preventDefault();
 
     const email = emailInput.value.trim();
@@ -90,45 +73,28 @@ loginForm.addEventListener("submit", async (event) => {
     const selectedRole = selectedRoleInput.value;
 
     if (!email || !password) {
-
         showMessage("Please enter your email and password.");
-
         return;
-
     }
 
     if (!selectedRole) {
-
         showMessage("Please select your account type.");
-
         return;
-
     }
 
     loginButton.disabled = true;
     loginButton.textContent = "Logging in...";
 
-    showMessage("Connecting to CampusTrack...", "success");
-
     try {
-
-        // Authenticate user with Supabase
-
         const { data, error } =
             await supabaseClient.auth.signInWithPassword({
-
-                email: email,
-                password: password
-
+                email,
+                password
             });
 
-        if (error) {
-            throw error;
-        }
+        if (error) throw error;
 
         const user = data.user;
-
-        // Get user's role from profiles table
 
         const { data: profile, error: profileError } =
             await supabaseClient
@@ -137,134 +103,74 @@ loginForm.addEventListener("submit", async (event) => {
                 .eq("id", user.id)
                 .maybeSingle();
 
-        if (profileError) {
-            throw profileError;
-        }
+        if (profileError) throw profileError;
 
         if (!profile) {
-
             await supabaseClient.auth.signOut();
-
-            throw new Error(
-                "Your account profile was not found. Contact the administrator."
-            );
-
+            throw new Error("Account profile not found.");
         }
 
-        // Verify account role
-
-        const actualRole = profile.role.toLowerCase();
+        const actualRole = (profile.role || "").toLowerCase();
 
         if (actualRole !== selectedRole.toLowerCase()) {
-
             await supabaseClient.auth.signOut();
-
             throw new Error(
-                "Incorrect account type selected. Please choose " +
+                "Incorrect account type. Please select " +
                 actualRole.toUpperCase() + "."
             );
-
         }
 
-        showMessage(
-            "Login successful! Welcome to CampusTrack.",
-            "success"
-        );
-
-        // Temporary dashboard navigation
-        // All roles use the existing index.html
+        showMessage("Login successful!", "success");
 
         const dashboards = {
-
             student: "index.html",
-
             admin: "index.html",
-
             driver: "index.html"
-
         };
 
-        setTimeout(() => {
-
-            window.location.href = dashboards[actualRole];
-
-        }, 1000);
+        window.location.href = dashboards[actualRole];
 
     } catch (error) {
-
         console.error("Login Error:", error);
-
-        showMessage(
-            error.message || "Login failed. Please try again."
-        );
-
+        showMessage(error.message || "Login failed.");
     } finally {
-
         loginButton.disabled = false;
         loginButton.textContent = "Login to CampusTrack";
-
     }
-
 });
 
-
-// 6. Forgot Password
-
+// Forgot Password
 forgotPassword.addEventListener("click", async (event) => {
-
     event.preventDefault();
 
     const email = emailInput.value.trim();
 
     if (!email) {
-
-        showMessage("Please enter your email address first.");
-
+        showMessage("Please enter your email first.");
         emailInput.focus();
-
         return;
-
     }
 
     try {
-
-        showMessage(
-            "Sending password reset email...",
-            "success"
-        );
+        showMessage("Sending reset email...", "success");
 
         const { error } =
             await supabaseClient.auth.resetPasswordForEmail(email, {
-
                 redirectTo:
                     window.location.origin + "/reset-password.html"
-
             });
 
-        if (error) {
-            throw error;
-        }
+        if (error) throw error;
 
         showMessage(
-            "Password reset email sent! Please check your inbox.",
+            "Password reset email sent!",
             "success"
         );
 
     } catch (error) {
-
         console.error("Password Reset Error:", error);
-
-        showMessage(
-            error.message || "Unable to send password reset email."
-        );
-
+        showMessage(error.message || "Password reset failed.");
     }
-
 });
 
-
-// 7. Initial Setup
-
-console.log(
-    "CampusTrack Login System Initialized Successfully!"
-);
+console.log("CampusTrack Login System Ready!");

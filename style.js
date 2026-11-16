@@ -15,6 +15,20 @@ const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
+window.supabaseClient = supabaseClient;
+// Protect dashboard using Supabase session
+async function checkLoginSession() {
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error || !data.session) {
+        window.location.replace("login.html");
+        return;
+    }
+
+    console.log("Login verified! Dashboard accessible.");
+}
+
+checkLoginSession();
 
 
 // 2. DISPLAY CURRENT DATE
@@ -369,6 +383,20 @@ navigationLinks.forEach(link => {
 loadBuses();
 
 
-// 15. CONSOLE MESSAGE
+// CampusTrack Logout Function
 
-console.log("CampusTrack Dashboard Initialized!");
+document.getElementById("logoutButton").addEventListener("click", async function () {
+
+    console.log("Logout button clicked!");
+
+    const { error } = await window.supabaseClient.auth.signOut();
+
+    if (error) {
+        console.error("Logout error:", error);
+        alert(error.message);
+        return;
+    }
+
+    window.location.replace("login.html");
+
+});
