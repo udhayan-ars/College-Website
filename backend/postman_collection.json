@@ -1,0 +1,1186 @@
+{
+  "info": {
+    "name": "Smart Hostel API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "deviceKey",
+      "value": "<DEVICE_API_KEY from .env>"
+    }
+  ],
+  "item": [
+    {
+      "name": "0 Health",
+      "item": [
+        {
+          "name": "GET /api/health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1 Auth",
+      "item": [
+        {
+          "name": "POST /api/auth/login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Login as admin (cookie is saved automatically)",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"chairman\",\n  \"password\": \"<ADMIN_PASSWORD>\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/auth/me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/auth/logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/auth/change-password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"old\",\n  \"newPassword\": \"NewPass123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/change-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "change-password"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 Users (admin)",
+      "item": [
+        {
+          "name": "GET /api/users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/users",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"wb2\",\n  \"password\": \"Warden123\",\n  \"role\": \"warden\",\n  \"fullName\": \"Boys Warden 2\",\n  \"hostel\": \"Boys\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH /api/users/2",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "2"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 Students",
+      "item": [
+        {
+          "name": "GET /api/students?hostel=Boys&search=ar&dept=CSE&year=2nd&status=Inside&limit=50&offset=0",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/students?hostel=Boys&search=ar&dept=CSE&year=2nd&status=Inside&limit=50&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ],
+              "query": [
+                {
+                  "key": "hostel",
+                  "value": "Boys"
+                },
+                {
+                  "key": "search",
+                  "value": "ar"
+                },
+                {
+                  "key": "dept",
+                  "value": "CSE"
+                },
+                {
+                  "key": "year",
+                  "value": "2nd"
+                },
+                {
+                  "key": "status",
+                  "value": "Inside"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/students",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"B010\",\n  \"name\": \"New Student\",\n  \"gender\": \"Boys\",\n  \"dept\": \"CSE\",\n  \"year\": \"1st\",\n  \"phone\": \"9111111111\",\n  \"email\": \"new@college.edu\",\n  \"parent\": \"Mr. Parent 9100000010\",\n  \"emergencyContact\": \"9100000010\",\n  \"password\": \"Student123\",\n  \"roomId\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/students/B010",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/students/B010",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "B010"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/students/B010",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"9222222222\",\n  \"dept\": \"ECE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students/B010",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "B010"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/students/B010",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Archive (soft delete)",
+            "url": {
+              "raw": "{{baseUrl}}/api/students/B010",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "B010"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/students/B010?permanent=true",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Admin only; blocked if biometric history exists",
+            "url": {
+              "raw": "{{baseUrl}}/api/students/B010?permanent=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "B010"
+              ],
+              "query": [
+                {
+                  "key": "permanent",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 Rooms",
+      "item": [
+        {
+          "name": "GET /api/rooms?hostel=Boys&available=true",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms?hostel=Boys&available=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms"
+              ],
+              "query": [
+                {
+                  "key": "hostel",
+                  "value": "Boys"
+                },
+                {
+                  "key": "available",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/rooms",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomNo\": \"B-201\",\n  \"hostel\": \"Boys\",\n  \"floor\": 2,\n  \"capacity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/rooms/1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH /api/rooms/1",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"capacity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/rooms/allocate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Room check-in / room change",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"B002\",\n  \"roomId\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/allocate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "allocate"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/rooms/checkout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Room check-out",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"B002\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/checkout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "checkout"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/rooms/history/B002",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/history/B002",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "history",
+                "B002"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/rooms/1",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5 Biometric + Attendance",
+      "item": [
+        {
+          "name": "POST /api/biometric/events",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-device-key",
+                "value": "{{deviceKey}}"
+              }
+            ],
+            "description": "Device endpoint: uses x-device-key header, no login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"B001\",\n  \"eventType\": \"EXIT\",\n  \"result\": \"SUCCESS\",\n  \"deviceId\": \"BIO-B1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/biometric/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "biometric",
+                "events"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/biometric/simulate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "event: ENTRY | EXIT | FAIL",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"B001\",\n  \"event\": \"EXIT\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/biometric/simulate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "biometric",
+                "simulate"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/attendance/events?studentId=B001&from=2026-11-01&to=2026-11-30",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/events?studentId=B001&from=2026-11-01&to=2026-11-30",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "attendance",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "B001"
+                },
+                {
+                  "key": "from",
+                  "value": "2026-11-01"
+                },
+                {
+                  "key": "to",
+                  "value": "2026-11-30"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/attendance/daily?date=2026-11-13&hostel=Boys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/daily?date=2026-11-13&hostel=Boys",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "attendance",
+                "daily"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-11-13"
+                },
+                {
+                  "key": "hostel",
+                  "value": "Boys"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/attendance/report?from=2026-11-01&to=2026-11-30&hostel=Girls",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/report?from=2026-11-01&to=2026-11-30&hostel=Girls",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "attendance",
+                "report"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2026-11-01"
+                },
+                {
+                  "key": "to",
+                  "value": "2026-11-30"
+                },
+                {
+                  "key": "hostel",
+                  "value": "Girls"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/attendance/me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Login as a student first",
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "attendance",
+                "me"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6 Leaves",
+      "item": [
+        {
+          "name": "POST /api/leaves",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Login as a student",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Family function\",\n  \"departAt\": \"2026-12-20T08:00\",\n  \"returnAt\": \"2026-12-23T18:00\",\n  \"destination\": \"Erode\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/leaves",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "leaves"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/leaves?status=Pending",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/leaves?status=Pending",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "leaves"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "Pending"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH /api/leaves/1/decision",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Admin or warden",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Approved\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/leaves/1/decision",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                "1",
+                "decision"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/leaves/1/depart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/leaves/1/depart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                "1",
+                "depart"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7 Complaints",
+      "item": [
+        {
+          "name": "POST /api/complaints",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Wi-Fi\",\n  \"description\": \"Internet is very slow in room B-101\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/complaints",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "complaints"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/complaints",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/complaints",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "complaints"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH /api/complaints/1",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"In Progress\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/complaints/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "complaints",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8 Emergencies",
+      "item": [
+        {
+          "name": "POST /api/emergencies",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Medical emergency\",\n  \"reason\": \"High fever\",\n  \"destination\": \"City Hospital\",\n  \"expectedReturn\": \"2026-12-20T20:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/emergencies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "emergencies"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/emergencies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/emergencies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "emergencies"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH /api/emergencies/1",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Pending -> Approved/Rejected, Approved -> Returned",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Approved\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/emergencies/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "emergencies",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9 Content + Dashboard",
+      "item": [
+        {
+          "name": "GET /api/notices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/notices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notices"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/notices",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Hostel meeting at 6 PM\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notices"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/mess-menu",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/mess-menu",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mess-menu"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/mess-menu",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Lunch\": {\n    \"items\": \"Rice, Sambar, Poriyal\",\n    \"time\": \"12:30 - 2:00\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/mess-menu",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mess-menu"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/rules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/rules",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rules"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/dashboard?hostel=Boys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard?hostel=Boys",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard"
+              ],
+              "query": [
+                {
+                  "key": "hostel",
+                  "value": "Boys"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/bootstrap",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/bootstrap",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "bootstrap"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

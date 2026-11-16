@@ -1,0 +1,14 @@
+const r = require('express').Router();
+const c = require('../controllers/contentController');
+const d = require('../controllers/dashboardController');
+const b = require('../controllers/bootstrapController');
+const { authenticate, authorize } = require('../middleware/auth');
+r.use(authenticate);
+r.get('/bootstrap', b.get);
+r.get('/dashboard', authorize('admin', 'warden', 'staff'), d.summary);
+r.get('/notices', c.listNotices);
+r.post('/notices', authorize('admin', 'warden'), c.createNotice);
+r.get('/mess-menu', c.getMenu);
+r.put('/mess-menu', authorize('admin', 'warden', 'staff'), c.updateMenu);
+r.get('/rules', c.rules);
+module.exports = r;
