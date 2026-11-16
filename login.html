@@ -1,0 +1,439 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXORA | Secure Campus Access</title>
+
+    <link rel="stylesheet" href="login.css">
+
+    <style>
+        .role-switch {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 6px;
+            background: #f1f5fb;
+            border-radius: 12px;
+            margin: 25px 0;
+        }
+
+        .role-switch button {
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            background: transparent;
+            color: #64748b;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .role-switch button.active {
+            background: white;
+            color: #1765c5;
+            box-shadow: 0 2px 10px rgba(0,0,0,.08);
+        }
+
+        .login-form {
+            display: grid;
+            gap: 17px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #dce4ef;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #2670cb;
+            box-shadow: 0 0 0 3px rgba(38,112,203,.1);
+        }
+
+        .login-btn {
+            padding: 15px;
+            background: linear-gradient(135deg,#1765c5,#102c68);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .login-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .login-message {
+            font-size: 12px;
+            text-align: center;
+            min-height: 18px;
+            color: #dc2626;
+        }
+
+        .password-wrap {
+            position: relative;
+        }
+
+        .password-wrap input {
+            padding-right: 65px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            color: #2670cb;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .security-note {
+            margin-top: 24px;
+        }
+
+        .access-content h2 {
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <section class="brand-panel">
+
+        <div class="brand">
+            <div class="brand-logo">N</div>
+            <span>NEXORA</span>
+        </div>
+
+        <div class="brand-content">
+
+            <p class="eyebrow">SMART CAMPUS ECOSYSTEM</p>
+
+            <h1>One Campus.<br>One Experience.</h1>
+
+            <p class="brand-description">
+                A smarter way to connect, order and experience
+                your campus services — all in one place.
+            </p>
+
+            <div class="feature-list">
+                <div class="feature">
+                    <span>✓</span>
+                    Smart Canteen Management
+                </div>
+
+                <div class="feature">
+                    <span>✓</span>
+                    Seamless Campus Access
+                </div>
+
+                <div class="feature">
+                    <span>✓</span>
+                    Secure User Experience
+                </div>
+            </div>
+
+        </div>
+
+        <div class="brand-footer">
+            © 2026 NEXORA Campus Portal
+        </div>
+
+    </section>
+
+
+    <section class="access-panel">
+
+        <div class="access-content">
+
+            <div class="mobile-brand">
+                <div class="brand-logo">N</div>
+                <span>NEXORA</span>
+            </div>
+
+            <p class="welcome-label">WELCOME TO NEXORA</p>
+
+            <h2>Welcome back!</h2>
+
+            <p class="subtitle">
+                Sign in to continue to your campus dashboard.
+            </p>
+
+            <div class="role-switch">
+
+                <button
+                    type="button"
+                    id="studentTab"
+                    class="active"
+                    onclick="switchRole('student')">
+                    🎓 Student
+                </button>
+
+                <button
+                    type="button"
+                    id="adminTab"
+                    onclick="switchRole('admin')">
+                    🛡️ Administrator
+                </button>
+
+            </div>
+
+
+            <form id="loginForm" class="login-form">
+
+                <div class="form-group" id="emailGroup">
+
+                    <label for="loginEmail">Student Email Address</label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Enter your registered email"
+                        autocomplete="username">
+
+                </div>
+
+
+                <div class="form-group" id="usernameGroup" hidden>
+
+                    <label for="loginUsername">Admin Username</label>
+
+                    <input
+                        type="text"
+                        id="loginUsername"
+                        placeholder="Enter admin username"
+                        autocomplete="username">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="loginPassword">Password</label>
+
+                    <div class="password-wrap">
+
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            id="togglePassword">
+                            SHOW
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                    id="loginButton">
+                    Sign In to Dashboard →
+                </button>
+
+                <p class="login-message" id="loginMessage"></p>
+
+            </form>
+
+
+            <div class="security-note">
+                🔒 Secure access to your campus ecosystem
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+const API_BASE = "http://127.0.0.1:5001/api";
+
+let currentRole = "student";
+
+
+function switchRole(role) {
+
+    currentRole = role;
+
+    document.getElementById("studentTab")
+        .classList.toggle("active", role === "student");
+
+    document.getElementById("adminTab")
+        .classList.toggle("active", role === "admin");
+
+    document.getElementById("emailGroup").hidden =
+        role !== "student";
+
+    document.getElementById("usernameGroup").hidden =
+        role !== "admin";
+
+    document.getElementById("loginEmail").required =
+        role === "student";
+
+    document.getElementById("loginUsername").required =
+        role === "admin";
+
+    document.getElementById("loginPassword").value = "";
+
+    document.getElementById("loginMessage").textContent = "";
+
+}
+
+
+document.getElementById("togglePassword")
+    .addEventListener("click", function() {
+
+        const passwordInput =
+            document.getElementById("loginPassword");
+
+        const isPassword =
+            passwordInput.type === "password";
+
+        passwordInput.type =
+            isPassword ? "text" : "password";
+
+        this.textContent =
+            isPassword ? "HIDE" : "SHOW";
+
+    });
+
+
+document.getElementById("loginForm")
+    .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const button =
+            document.getElementById("loginButton");
+
+        const message =
+            document.getElementById("loginMessage");
+
+        const password =
+            document.getElementById("loginPassword").value;
+
+        button.disabled = true;
+        button.textContent = "Verifying...";
+        message.textContent = "";
+
+        try {
+
+            let endpoint;
+            let requestData;
+
+            if (currentRole === "student") {
+
+                endpoint = "/student/login";
+
+                requestData = {
+                    email: document.getElementById("loginEmail")
+                        .value.trim(),
+                    password: password
+                };
+
+            } else {
+
+                endpoint = "/admin/login";
+
+                requestData = {
+                    username: document.getElementById("loginUsername")
+                        .value.trim(),
+                    password: password
+                };
+
+            }
+
+            const response = await fetch(
+                `${API_BASE}${endpoint}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestData)
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                message.textContent =
+                    result.message || "Invalid login details.";
+                return;
+            }
+
+            if (currentRole === "student") {
+
+                sessionStorage.setItem(
+                    "nexoraStudent",
+                    JSON.stringify(result.student)
+                );
+
+                window.location.href = "student.html";
+
+            } else {
+
+                sessionStorage.setItem(
+                    "nexoraAdmin",
+                    JSON.stringify(result.admin)
+                );
+
+                window.location.href = "admin.html";
+
+            }
+
+        } catch (error) {
+
+            console.error("Login Error:", error);
+
+            message.textContent =
+                "Cannot connect to server. Check Flask backend.";
+
+        } finally {
+
+            button.disabled = false;
+            button.textContent = "Sign In to Dashboard →";
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

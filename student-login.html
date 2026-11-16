@@ -1,0 +1,430 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Access | NEXORA</title>
+    <link rel="stylesheet" href="student-login.css">
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <a href="login.html" class="back-link">← Back to NEXORA</a>
+
+    <div class="auth-container">
+
+        <!-- BRAND PANEL -->
+        <div class="auth-brand">
+
+            <div class="brand-logo">N</div>
+            <h2>NEXORA</h2>
+            <p>STUDENT PORTAL</p>
+
+            <div class="brand-message">
+                <h1>Your Campus.<br>Your Experience.</h1>
+                <p>
+                    Discover a smarter and easier way to enjoy
+                    your campus canteen.
+                </p>
+            </div>
+
+            <span class="brand-footer">
+                © 2026 NEXORA Campus Portal
+            </span>
+
+        </div>
+
+
+        <!-- AUTHENTICATION PANEL -->
+        <div class="auth-content">
+
+            <div class="auth-heading">
+
+                <span class="welcome-tag">STUDENT ACCESS</span>
+
+                <h2 id="formTitle">Welcome Back!</h2>
+
+                <p id="formSubtitle">
+                    Login to continue to your student dashboard.
+                </p>
+
+            </div>
+
+
+            <!-- LOGIN FORM -->
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="loginEmail">Student Email</label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Enter your college email"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="loginPassword">Password</label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="show-password"
+                    onclick="togglePassword('loginPassword', this)"
+                >
+                    Show Password
+                </button>
+
+
+                <button type="submit" class="primary-btn" id="loginButton">
+                    Login to Dashboard →
+                </button>
+
+
+                <p class="switch-text">
+                    New to NEXORA?
+
+                    <a href="#" onclick="showRegister(); return false;">
+                        Create Account
+                    </a>
+                </p>
+
+            </form>
+
+
+
+            <!-- REGISTRATION FORM -->
+            <form id="registerForm" class="hidden">
+
+                <div class="form-group">
+
+                    <label for="registerName">Full Name</label>
+
+                    <input
+                        type="text"
+                        id="registerName"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="registerEmail">Student Email</label>
+
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        placeholder="Enter your college email"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="registerPassword">Create Password</label>
+
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        placeholder="Minimum 8 characters"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="show-password"
+                    onclick="togglePassword('registerPassword', this)"
+                >
+                    Show Password
+                </button>
+
+
+                <button type="submit" class="primary-btn" id="registerButton">
+                    Create Student Account →
+                </button>
+
+
+                <p class="switch-text">
+                    Already have an account?
+
+                    <a href="#" onclick="showLogin(); return false;">
+                        Login
+                    </a>
+                </p>
+
+            </form>
+
+
+            <div class="security-info">
+                🔒 Your account information is protected.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+// Flask API URL
+const API_BASE = "http://127.0.0.1:5001/api";
+
+
+// SWITCH TO REGISTRATION
+function showRegister() {
+
+    document.getElementById("loginForm").classList.add("hidden");
+
+    document.getElementById("registerForm").classList.remove("hidden");
+
+    document.getElementById("formTitle").textContent = "Create Account";
+
+    document.getElementById("formSubtitle").textContent =
+        "Register to access your student portal.";
+
+}
+
+
+// SWITCH TO LOGIN
+function showLogin() {
+
+    document.getElementById("registerForm").classList.add("hidden");
+
+    document.getElementById("loginForm").classList.remove("hidden");
+
+    document.getElementById("formTitle").textContent = "Welcome Back!";
+
+    document.getElementById("formSubtitle").textContent =
+        "Login to continue to your student dashboard.";
+
+}
+
+
+// SHOW / HIDE PASSWORD
+function togglePassword(id, button) {
+
+    const field = document.getElementById(id);
+
+    if (field.type === "password") {
+
+        field.type = "text";
+
+        button.textContent = "Hide Password";
+
+    } else {
+
+        field.type = "password";
+
+        button.textContent = "Show Password";
+
+    }
+
+}
+
+
+// STUDENT REGISTRATION
+document.getElementById("registerForm").addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        const name = document.getElementById("registerName").value.trim();
+
+        const email = document.getElementById("registerEmail").value.trim();
+
+        const password = document.getElementById("registerPassword").value;
+
+        if (password.length < 8) {
+
+            alert("Password must contain at least 8 characters.");
+
+            return;
+
+        }
+
+        const button = document.getElementById("registerButton");
+
+        button.disabled = true;
+
+        button.textContent = "Creating Account...";
+
+        try {
+
+            const response = await fetch(
+                `${API_BASE}/student/register`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        password: password
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+
+                alert(result.message || "Registration failed.");
+
+                return;
+
+            }
+
+            alert("Student registration successful! Please login.");
+
+            document.getElementById("registerForm").reset();
+
+            document.getElementById("loginEmail").value = email;
+
+            showLogin();
+
+        }
+
+        catch (error) {
+
+            console.error("Registration Error:", error);
+
+            alert(
+                "Cannot connect to server. Please check whether Flask backend is running."
+            );
+
+        }
+
+        finally {
+
+            button.disabled = false;
+
+            button.textContent = "Create Student Account →";
+
+        }
+
+    }
+);
+
+
+
+// STUDENT LOGIN
+document.getElementById("loginForm").addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        const email = document.getElementById("loginEmail").value.trim();
+
+        const password = document.getElementById("loginPassword").value;
+
+        const button = document.getElementById("loginButton");
+
+        button.disabled = true;
+
+        button.textContent = "Verifying...";
+
+        try {
+
+            const response = await fetch(
+                `${API_BASE}/student/login`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+
+                alert(result.message || "Invalid login details.");
+
+                return;
+
+            }
+
+            // Store student session information
+            sessionStorage.setItem(
+                "nexoraStudent",
+                JSON.stringify(result.student)
+            );
+
+            alert("Welcome " + result.student.name + "!");
+
+            // Redirect to student dashboard
+            window.location.href = "student.html";
+
+        }
+
+        catch (error) {
+
+            console.error("Login Error:", error);
+
+            alert(
+                "Cannot connect to server. Please check whether Flask backend is running."
+            );
+
+        }
+
+        finally {
+
+            button.disabled = false;
+
+            button.textContent = "Login to Dashboard →";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

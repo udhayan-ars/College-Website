@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXORA | Student Dashboard</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f4f7fc;color:#172b4d}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:230px;background:#102d59;color:white;padding:28px 18px;flex-shrink:0}
+.logo{font-size:24px;font-weight:bold;letter-spacing:3px;margin:10px 12px 40px}
+.sidebar a{display:block;color:#d5e5fa;text-decoration:none;padding:14px;margin:7px 0;border-radius:9px}
+.sidebar a:hover{background:#2879c8}
+.main{flex:1;padding:30px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.profile,.card,.section{background:white;padding:20px;border-radius:13px;box-shadow:0 4px 18px #17345d0d}
+.welcome{margin:25px 0;padding:30px;border-radius:16px;color:white;background:linear-gradient(120deg,#174d91,#2879c8)}
+.welcome p{margin-top:10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:25px}
+.card p{color:#7c8ba1;margin-bottom:10px}
+.card h2{color:#236cc0}
+.section{margin-bottom:22px}
+.section h2{margin-bottom:17px}
+.menu-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.tab-btn,.add-btn,.order-btn{border:0;background:#2879c8;color:white;padding:10px 16px;border-radius:8px;cursor:pointer}
+.tab-btn.active{background:#102d59}
+.food-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:17px}
+.food-card{border:1px solid #e7edf5;border-radius:12px;overflow:hidden;background:white}
+.food-card img{width:100%;height:145px;object-fit:cover}
+.food-info{padding:15px}
+.food-info h3{margin:10px 0}
+.food-info p{color:#7c8ba1;font-size:13px;margin:8px 0}
+.price{font-weight:bold;color:#236cc0!important;font-size:17px!important}
+.badge{font-size:11px;color:#2879c8;background:#e6f1ff;padding:5px 9px;border-radius:15px}
+.add-btn{margin-top:8px}
+.cart-item{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #eee}
+.qty-controls button{padding:4px 9px;cursor:pointer}
+.empty-msg,.empty{color:#8491a4;padding:15px 0}
+select{padding:10px;border:1px solid #dce4ef;border-radius:8px;margin:7px 8px 7px 0}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid #edf0f5;font-size:13px}
+th{background:#f4f7fc}
+.table-wrap{overflow-x:auto}
+@media(max-width:700px){.layout{display:block}.sidebar{width:100%}.sidebar a{display:inline-block;padding:10px}.main{padding:17px}}
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+    <div class="logo">NEXORA</div>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#menu">Food Menu</a>
+    <a href="#cart">My Cart</a>
+    <a href="#orders">My Orders</a>
+    <a href="login.html">Logout</a>
+</aside>
+
+<main class="main" id="dashboard">
+
+<div class="top">
+    <h1>Student Dashboard</h1>
+    <div class="profile">Student Portal</div>
+</div>
+
+<div class="welcome">
+    <h2>Welcome to NEXORA Campus!</h2>
+    <p>Discover your favourite food and order easily.</p>
+</div>
+
+<div class="cards">
+    <div class="card"><p>Cart Items</p><h2 id="totalQty">0</h2></div>
+    <div class="card"><p>Today's Special</p><h2>Fresh Food</h2></div>
+    <div class="card"><p>Campus Service</p><h2>Available</h2></div>
+</div>
+
+<section class="section" id="menu">
+    <h2 id="menuTitle">Food Menu</h2>
+
+    <div class="menu-tabs">
+        <button class="tab-btn active" onclick="filterMenu('Morning',this)">Morning</button>
+        <button class="tab-btn" onclick="filterMenu('Afternoon',this)">Afternoon</button>
+        <button class="tab-btn" onclick="filterMenu('Evening',this)">Evening</button>
+        <button class="tab-btn" onclick="filterMenu('All',this)">All Items</button>
+    </div>
+
+    <div id="foodGrid" class="food-grid">
+        <p>Loading food menu...</p>
+    </div>
+</section>
+
+<section class="section" id="cart">
+    <h2>My Cart</h2>
+    <div id="cartItems">
+        <p class="empty-msg">Your cart is empty.</p>
+    </div>
+
+    <h3 style="margin-top:18px">Total: <span id="grandTotal">₹0</span></h3>
+
+    <div style="margin-top:15px">
+        <label>Order Role:</label>
+        <select id="userRole">
+            <option value="Student">Student</option>
+        </select>
+
+        <label>Payment:</label>
+        <select id="paymentMethod">
+            <option value="Cash">Cash</option>
+            <option value="UPI">UPI</option>
+        </select>
+    </div>
+
+    <button class="order-btn" onclick="placeOrder()">Place Order</button>
+</section>
+
+<section class="section" id="orders">
+    <h2>My Order History</h2>
+    <div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Token</th>
+<th>Role</th>
+<th>Items</th>
+<th>Total</th>
+<th>Payment</th>
+<th>Date</th>
+<th>Time</th>
+<th>Status</th>            </tr>
+        </thead>
+        <tbody id="orderHistoryBody">
+            <tr><td colspan="6">Loading orders...</td></tr>
+        </tbody>
+    </table>
+    </div>
+</section>
+
+</main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

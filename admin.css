@@ -1,0 +1,368 @@
+
+/* =====================================
+   NEXORA - ADMIN DASHBOARD
+   Matching Student Dashboard Theme
+===================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fc;
+    color: #172b4d;
+    min-height: 100vh;
+}
+
+/* MAIN LAYOUT */
+
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 230px;
+    background: #102d59;
+    color: white;
+    padding: 28px 18px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.sidebar h2 {
+    font-size: 23px;
+    letter-spacing: 2px;
+    margin: 10px 12px 40px;
+}
+
+.sidebar p {
+    color: #9bb9dd;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 25px 12px 12px;
+    text-transform: uppercase;
+}
+
+.sidebar a {
+    display: block;
+    color: #d5e5fa;
+    text-decoration: none;
+    padding: 14px;
+    margin: 7px 0;
+    border-radius: 9px;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: #2879c8;
+    color: white;
+}
+
+/* LOGOUT */
+
+.logout-btn {
+    width: 100%;
+    border: none;
+    background: #2879c8;
+    color: white;
+    padding: 13px;
+    margin-top: 25px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* MAIN CONTENT */
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    margin-left: 230px;
+    padding: 30px;
+}
+
+/* HEADER */
+
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.top-header h1 {
+    font-size: 27px;
+    color: #102d59;
+}
+
+.admin-profile {
+    background: white;
+    padding: 14px 20px;
+    border-radius: 13px;
+    box-shadow: 0 4px 18px #17345d0d;
+    color: #236cc0;
+    font-weight: bold;
+}
+
+/* WELCOME SECTION */
+
+.welcome-section {
+    margin: 25px 0;
+    padding: 30px;
+    border-radius: 16px;
+    color: white;
+    background: linear-gradient(120deg, #174d91, #2879c8);
+}
+
+.welcome-section h2 {
+    font-size: 24px;
+}
+
+.welcome-section p {
+    margin-top: 10px;
+    color: #e6f1ff;
+}
+
+/* DASHBOARD CARDS */
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 23px;
+    border-radius: 13px;
+    box-shadow: 0 4px 18px #17345d0d;
+    border: 1px solid #edf1f7;
+    transition: 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-card h3 {
+    color: #7c8ba1;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.stat-card h2 {
+    color: #236cc0;
+    font-size: 27px;
+}
+
+/* CONTENT SECTIONS */
+
+.content-section {
+    background: white;
+    padding: 23px;
+    border-radius: 13px;
+    box-shadow: 0 4px 18px #17345d0d;
+    margin-bottom: 22px;
+}
+
+.content-section h2 {
+    color: #102d59;
+    font-size: 21px;
+    margin-bottom: 18px;
+}
+
+/* INPUTS AND FORMS */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 22px;
+    max-width: 500px;
+}
+
+.form-group label {
+    color: #526782;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dce4ef;
+    border-radius: 8px;
+    outline: none;
+    background: white;
+    color: #172b4d;
+    font-family: Arial, sans-serif;
+}
+
+input:focus,
+select:focus {
+    border-color: #2879c8;
+    box-shadow: 0 0 0 3px #2879c81a;
+}
+
+.search-box {
+    max-width: 350px;
+    margin-bottom: 18px;
+}
+
+/* BUTTONS */
+
+.add-btn,
+.delete-btn {
+    border: none;
+    padding: 11px 17px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.add-btn {
+    background: #2879c8;
+    color: white;
+}
+
+.add-btn:hover,
+.logout-btn:hover {
+    background: #174d91;
+}
+
+.delete-btn {
+    background: #e74c5b;
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #c93646;
+}
+
+/* TABLES */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #edf0f5;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 1px solid #edf0f5;
+    font-size: 13px;
+}
+
+th {
+    background: #f4f7fc;
+    color: #102d59;
+    font-weight: bold;
+}
+
+td {
+    color: #526782;
+}
+
+tbody tr:hover {
+    background: #f8faff;
+}
+
+td select {
+    min-width: 120px;
+    padding: 8px;
+}
+
+/* ORDER STATUS */
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 11px;
+    border-radius: 20px;
+    background: #e6f1ff;
+    color: #2879c8;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* CATEGORY AND PAYMENT */
+
+.content-section p {
+    color: #526782;
+    padding: 9px 0;
+    line-height: 1.6;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 900px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 200px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 700px) {
+    .admin-container {
+        display: block;
+    }
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 18px;
+    }
+
+    .sidebar h2 {
+        margin: 10px 12px 20px;
+    }
+
+    .sidebar a {
+        display: inline-block;
+        padding: 10px;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 17px;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-section {
+        padding: 22px;
+    }
+}

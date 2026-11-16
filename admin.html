@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Campus Canteen - Admin Dashboard</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2>🎓 Smart Canteen</h2>
+        <p>Main Menu</p>
+
+        <a href="#dashboard" class="active">📊 Dashboard</a>
+        <a href="#orders">🛒 Manage Orders</a>
+        <a href="#food">🍔 Manage Food</a>
+        <a href="#categories">📂 Categories</a>
+        <a href="#payments">💳 Payments</a>
+
+        <p>Account</p>
+        <a href="#settings">⚙️ Settings</a>
+
+        <button class="logout-btn" onclick="logout()">
+            🚪 Logout
+        </button>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="top-header">
+            <h1>Admin Dashboard</h1>
+
+            <div class="admin-profile">
+                👤 Welcome, Admin!
+            </div>
+        </header>
+
+
+        <!-- DASHBOARD -->
+        <section id="dashboard">
+
+            <div class="welcome-section">
+                <h2>Welcome to Smart Campus Canteen!</h2>
+                <p>Manage your canteen orders, food items and sales.</p>
+            </div>
+
+            <!-- STATISTICS -->
+            <div class="dashboard-cards">
+
+                <div class="stat-card">
+                    <h3>📦 Total Orders</h3>
+                    <h2 id="totalOrders">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <h3>⏳ Pending Orders</h3>
+                    <h2 id="pendingOrders">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <h3>💰 Total Sales</h3>
+                    <h2 id="totalSales">₹0.00</h2>
+                </div>
+
+                <div class="stat-card">
+                    <h3>🍔 Food Items</h3>
+                    <h2 id="totalFood">0</h2>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ORDER MANAGEMENT -->
+        <section class="content-section" id="orders">
+
+            <h2>🛒 Order Management</h2>
+
+            <input
+                type="text"
+                id="orderSearch"
+                class="search-box"
+                placeholder="Search orders..."
+                oninput="searchOrders()"
+            >
+
+            <div class="table-container">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+<th>Customer</th>
+<th>Items</th>
+<th>Total</th>
+<th>Payment</th>
+<th>Date</th>
+<th>Time</th>
+<th>Status</th>
+<th>Action</th>                        </tr>
+                    </thead>
+
+                    <tbody id="orderTable">
+                        <tr>
+                            <td colspan="9" style="text-align:center">
+                                Loading orders...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+
+
+        <!-- FOOD MANAGEMENT -->
+        <section class="content-section" id="food">
+
+            <h2>🍔 Food Management</h2>
+
+            <div class="form-group">
+
+                <label>Food Name</label>
+                <input
+                    type="text"
+                    id="foodName"
+                    placeholder="Enter food name"
+                >
+
+                <label>Food Price</label>
+                <input
+                    type="number"
+                    id="foodPrice"
+                    placeholder="Enter price"
+                    min="1"
+                    step="0.01"
+                >
+
+                <label>Food Category</label>
+
+                <select id="foodCategory">
+                    <option value="Morning">Morning Breakfast</option>
+                    <option value="Afternoon">Afternoon Meals</option>
+                    <option value="Evening">Evening Snacks</option>
+                </select>
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    onclick="addFood()"
+                >
+                    + Add Food Item
+                </button>
+
+            </div>
+
+
+            <!-- FOOD TABLE -->
+            <div class="table-container">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Food Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="foodTable">
+                        <tr>
+                            <td colspan="4" style="text-align:center">
+                                Loading food items...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+
+
+        <!-- CATEGORY MANAGEMENT -->
+        <section class="content-section" id="categories">
+
+            <h2>📂 Food Categories</h2>
+            <p>🍳 Morning Breakfast</p>
+            <p>🍛 Afternoon Meals</p>
+            <p>🌙 Evening Snacks</p>
+
+        </section>
+
+
+        <!-- PAYMENTS -->
+        <section class="content-section" id="payments">
+
+            <h2>💳 Payment Management</h2>
+            <p>Payment methods supported:</p>
+            <p>💵 Cash on Counter</p>
+            <p>📱 UPI / QR Scan</p>
+            <p>💳 College ID Card</p>
+
+        </section>
+
+
+        <!-- SETTINGS -->
+        <section class="content-section" id="settings">
+
+            <h2>⚙️ Settings</h2>
+            <p>Smart Campus Canteen Admin Panel</p>
+
+        </section>
+
+    </main>
+</div>
+
+
+<!-- JAVASCRIPT -->
+<script>
+
+const API_URL = "http://127.0.0.1:5001/api/food-items";
+const ORDERS_API_URL = "http://127.0.0.1:5001/api/orders";
+
+
+// ======================================
+// LOAD ORDERS FROM DATABASE
+// ======================================
+
+async function loadOrders() {
+
+    const table = document.getElementById("orderTable");
+
+    try {
+
+        const response = await fetch(ORDERS_API_URL);
+
+        if (!response.ok) {
+            throw new Error("Unable to load orders");
+        }
+
+        const orders = await response.json();
+
+        table.innerHTML = "";
+
+        if (!Array.isArray(orders) || orders.length === 0) {
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align:center">
+                        No orders available
+                    </td>
+                </tr>
+            `;
+
+            updateOrderStats([]);
+            return;
+        }
+
+        
+orders.forEach(order => {
+
+    const row = table.insertRow();
+
+    let orderDate = "N/A";
+    let orderTime = "N/A";
+
+    if (order.created_at) {
+        const dateTime = new Date(
+            order.created_at.replace(" ", "T") + "Z"
+        );
+
+        if (!isNaN(dateTime.getTime())) {
+            orderDate = dateTime.toLocaleDateString("en-IN", {
+                timeZone: "Asia/Kolkata"
+            });
+
+            orderTime = dateTime.toLocaleTimeString("en-IN", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+                timeZone: "Asia/Kolkata"
+            });
+        }
+    }
+
+    row.innerHTML = `
+        <td>${escapeHTML(order.token ?? order.id)}</td>
+        <td>${escapeHTML(order.role || "Customer")}</td>
+        <td>${escapeHTML(order.items || "")}</td>
+        <td>₹${Number(order.total || 0).toFixed(2)}</td>
+        <td>${escapeHTML(order.payment || "")}</td>
+        <td>${orderDate}</td>
+        <td>${orderTime}</td>
+        <td>
+            <span class="status-badge">
+                ${escapeHTML(order.status || "Pending")}
+            </span>
+        </td>
+        <td>
+            <select onchange="updateOrderStatus(${Number(order.id)}, this.value)">
+                <option value="Preparing" ${order.status === "Preparing" ? "selected" : ""}>Preparing</option>
+                <option value="Ready" ${order.status === "Ready" ? "selected" : ""}>Ready</option>
+                <option value="Completed" ${order.status === "Completed" ? "selected" : ""}>Completed</option>
+            </select>
+        </td>
+    `;
+
+});
+
+        updateOrderStats(orders);
+        searchOrders();
+
+    } catch (error) {
+
+        console.error("Load orders error:", error);
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align:center">
+                    Unable to load orders. Check backend server.
+                </td>
+            </tr>
+        `;
+
+    }
+}
+// ======================================
+// UPDATE ORDER STATUS
+// ======================================
+
+async function updateOrderStatus(orderId, newStatus) {
+
+    try {
+
+        const response = await fetch(
+            `${ORDERS_API_URL}/${orderId}/status`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: newStatus
+                })
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Status update failed");
+        }
+
+        alert("Order status updated successfully!");
+
+        await loadOrders();
+
+    } catch (error) {
+
+        console.error("Status update error:", error);
+
+        alert(error.message);
+
+        await loadOrders();
+
+    }
+
+}
+
+// ======================================
+// UPDATE DASHBOARD STATISTICS
+// ======================================
+
+function updateOrderStats(orders) {
+
+    // Total Orders
+    document.getElementById("totalOrders").textContent =
+        orders.length;
+
+    // Pending Orders
+    const pending = orders.filter(order => {
+
+        return String(order.status || "").toLowerCase() !== "completed";
+
+    }).length;
+
+    document.getElementById("pendingOrders").textContent =
+        pending;
+
+    // Total Sales
+    const sales = orders.reduce((sum, order) => {
+
+        return sum + Number(order.total || 0);
+
+    }, 0);
+
+    document.getElementById("totalSales").textContent =
+        "₹" + sales.toFixed(2);
+
+}
+
+
+// ======================================
+// LOAD FOOD ITEMS FROM DATABASE
+// ======================================
+
+async function loadFoodItems() {
+
+    const table = document.getElementById("foodTable");
+
+    try {
+
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+            throw new Error("Unable to load food items");
+        }
+
+        const foods = await response.json();
+
+        table.innerHTML = "";
+
+        if (!Array.isArray(foods) || foods.length === 0) {
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align:center">
+                        No food items available
+                    </td>
+                </tr>
+            `;
+
+            updateFoodCount();
+            return;
+        }
+
+        foods.forEach(food => {
+
+            const row = table.insertRow();
+
+            row.dataset.id = food.id;
+
+            row.innerHTML = `
+                <td>${escapeHTML(food.name)}</td>
+                <td>₹${Number(food.price).toFixed(2)}</td>
+                <td>${escapeHTML(food.meal_time || food.category || "")}</td>
+                <td>
+                    <button
+                        class="delete-btn"
+                        onclick="deleteFood(${Number(food.id)}, this)"
+                    >
+                        Delete
+                    </button>
+                </td>
+            `;
+
+        });
+
+        updateFoodCount();
+
+    } catch (error) {
+
+        console.error("Load food error:", error);
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="4" style="text-align:center">
+                    Unable to load food items. Check backend server.
+                </td>
+            </tr>
+        `;
+
+    }
+}
+
+
+// ======================================
+// ADD FOOD ITEM TO DATABASE
+// ======================================
+
+async function addFood() {
+
+    const name = document.getElementById("foodName").value.trim();
+
+    const price = Number(
+        document.getElementById("foodPrice").value
+    );
+
+    const category = document.getElementById("foodCategory").value;
+
+    if (!name || !Number.isFinite(price) || price <= 0) {
+
+        alert("Please enter valid food details!");
+        return;
+
+    }
+
+    try {
+
+        const response = await fetch(API_URL, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                name: name,
+                price: price,
+                category: category,
+                meal_time: category,
+                description: "",
+                image: ""
+
+            })
+
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.message || "Unable to add food item"
+            );
+
+        }
+
+        document.getElementById("foodName").value = "";
+        document.getElementById("foodPrice").value = "";
+
+        await loadFoodItems();
+
+        alert("Food item added successfully!");
+
+    } catch (error) {
+
+        console.error("Add food error:", error);
+
+        alert(error.message);
+
+    }
+
+}
+
+
+// ======================================
+// DELETE FOOD ITEM FROM DATABASE
+// ======================================
+
+async function deleteFood(foodId, button) {
+
+    if (!confirm("Are you sure you want to delete this food item?")) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/${foodId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.message || "Unable to delete food item"
+            );
+
+        }
+
+        await loadFoodItems();
+
+        alert("Food item deleted successfully!");
+
+    } catch (error) {
+
+        console.error("Delete food error:", error);
+
+        alert(error.message);
+
+    }
+
+}
+
+
+// ======================================
+// UPDATE TOTAL FOOD COUNT
+// ======================================
+
+function updateFoodCount() {
+
+    const rows = document.querySelectorAll("#foodTable tr");
+
+    const count = [...rows].filter(row => {
+
+        return !row.querySelector("td[colspan]");
+
+    }).length;
+
+    document.getElementById("totalFood").textContent = count;
+
+}
+
+
+// ======================================
+// SEARCH ORDERS
+// ======================================
+
+function searchOrders() {
+
+    const search = document
+        .getElementById("orderSearch")
+        .value.toLowerCase();
+
+    const rows = document.querySelectorAll("#orderTable tr");
+
+    rows.forEach(row => {
+
+        row.style.display =
+            row.innerText.toLowerCase().includes(search)
+                ? ""
+                : "none";
+
+    });
+
+}
+
+
+// ======================================
+// PREVENT HTML INJECTION
+// ======================================
+
+function escapeHTML(value) {
+
+    return String(value ?? "").replace(/[&<>"']/g, function(char) {
+
+        return {
+
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+
+        }[char];
+
+    });
+
+}
+
+
+// ======================================
+// LOGOUT
+// ======================================
+
+function logout() {
+    const confirmLogout = confirm("Are you sure you want to logout?");
+
+    if (confirmLogout) {
+        sessionStorage.removeItem("nexoraAdmin");
+        window.location.href = "login.html";
+    }
+}
+
+// ======================================
+// LOAD DATA WHEN PAGE OPENS
+// ======================================
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    loadFoodItems();
+    loadOrders();
+
+});
+
+</script>
+
+</body>
+</html>
