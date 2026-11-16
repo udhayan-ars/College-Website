@@ -1,0 +1,234 @@
+
+/* =================================
+   CampusTrack - Login Page Styling
+================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Main Container */
+
+.login-container {
+    width: 100%;
+    max-width: 450px;
+}
+
+/* Login Card */
+
+.login-card {
+    background: #ffffff;
+    padding: 40px 35px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+/* Logo Section */
+
+.logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo span {
+    font-size: 55px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.logo h1 {
+    font-size: 30px;
+    font-weight: 800;
+    color: #1e3a8a;
+}
+
+.logo p {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #64748b;
+    margin-top: 7px;
+}
+
+/* Welcome Section */
+
+.welcome {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.welcome h2 {
+    color: #0f172a;
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* Form */
+
+form label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 9px;
+    margin-top: 18px;
+}
+
+/* Role Selection */
+
+.role-selection {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.role-btn {
+    flex: 1;
+    padding: 12px 5px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.role-btn:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+.role-btn.active {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+}
+
+/* Input Fields */
+
+form input:not([type="hidden"]) {
+    width: 100%;
+    padding: 14px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+    background: #f8fafc;
+}
+
+form input:focus {
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+form input::placeholder {
+    color: #94a3b8;
+}
+
+/* Forgot Password */
+
+.forgot-password {
+    text-align: right;
+    margin-top: 12px;
+}
+
+.forgot-password a {
+    color: #2563eb;
+    font-size: 13px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+/* Login Button */
+
+#loginButton {
+    width: 100%;
+    padding: 15px;
+    margin-top: 25px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#loginButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+#loginButton:active {
+    transform: scale(0.98);
+}
+
+/* Message */
+
+#message {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Footer */
+
+.login-footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.login-footer p {
+    color: #94a3b8;
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+/* Mobile Responsive */
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 30px 22px;
+    }
+
+    .logo h1 {
+        font-size: 26px;
+    }
+
+    .role-selection {
+        gap: 6px;
+    }
+
+    .role-btn {
+        font-size: 11px;
+        padding: 11px 3px;
+    }
+}
