@@ -1607,13 +1607,16 @@ async function respondSeat(action) {
    FACULTY / ADMIN ACTIONS - EXISTING
 ===================================================== */
 
+a
 async function reviewApplication(id) {
     ensureFacultyStyles();
 
     const d = await api('/api/faculty/applications/' + id);
     const minimum = Number(d.course?.min_percentage ?? 0);
     const percentage = Number(d.percentage ?? 0);
-    const eligible = d.percentage !== null &&
+
+    const eligible =
+        d.percentage !== null &&
         d.percentage !== undefined &&
         d.course &&
         percentage >= minimum;
@@ -1812,28 +1815,35 @@ async function verifyDocument(id, status, appId) {
 
     } catch (error) {
         console.error('Document verification failed:', error);
+        alert('Unable to verify document. Please try again.');
     }
 }
 
 
-async function reviewDecision(id,recommendation) {
-    const result = await api(`/api/faculty/applications/${id}/review`,'POST',{
-        recommendation,
-        remarks:$('rm').value
-    });
+async function reviewDecision(id, recommendation) {
+    try {
+        await api(`/api/faculty/applications/${id}/review`, 'POST', {
+            recommendation,
+            remarks: $('rm').value
+        });
 
-    alert('Eligibility: ' + result.eligible);
-    go('Assigned Applications');
+        alert('Recommendation submitted successfully.');
+        go('Assigned Applications');
+
+    } catch (error) {
+        console.error('Faculty recommendation failed:', error);
+        alert('Unable to submit recommendation. Please try again.');
+    }
 }
 
 
 async function addCourse() {
-    await api('/api/admin/courses','POST',{
-        name:$('cn').value,
-        department:$('cd').value,
-        intake:$('ci').value,
-        min_percentage:$('cm').value,
-        fee:$('cfee').value
+    await api('/api/admin/courses', 'POST', {
+        name: $('cn').value,
+        department: $('cd').value,
+        intake: $('ci').value,
+        min_percentage: $('cm').value,
+        fee: $('cfee').value
     });
 
     alert('Course added');
@@ -1842,11 +1852,14 @@ async function addCourse() {
 
 
 async function assignFaculty(id) {
-    const facultyId = Number($('fs'+id).value);
-    if (!facultyId) return alert('Select a faculty member');
+    const facultyId = Number($('fs' + id).value);
 
-    await api(`/api/admin/applications/${id}/assign`,'POST',{
-        faculty_id:facultyId
+    if (!facultyId) {
+        return alert('Select a faculty member');
+    }
+
+    await api(`/api/admin/applications/${id}/assign`, 'POST', {
+        faculty_id: facultyId
     });
 
     go('Applications');
@@ -1854,28 +1867,28 @@ async function assignFaculty(id) {
 
 
 async function confirmAdmission(id) {
-    await api(`/api/admin/applications/${id}/confirm`,'POST');
+    await api(`/api/admin/applications/${id}/confirm`, 'POST');
     alert('Admission confirmed');
     go('Applications');
 }
 
 
 async function approveFaculty(id) {
-    await api(`/api/admin/faculty/${id}/approve`,'POST');
+    await api(`/api/admin/faculty/${id}/approve`, 'POST');
     go('Faculty');
 }
 
 
 async function adminAction(path) {
-    const result = await api('/api/admin/' + path,'POST');
+    const result = await api('/api/admin/' + path, 'POST');
     alert('Operation completed');
     console.log(result);
 }
 
 
 async function sendAnnouncement() {
-    await api('/api/admin/notify','POST',{
-        message:$('an').value
+    await api('/api/admin/notify', 'POST', {
+        message: $('an').value
     });
 
     alert('Announcement sent');
@@ -1891,115 +1904,328 @@ function ensureFacultyStyles() {
 
     style.textContent = `
         .faculty-page { color:#183452; }
+
         .faculty-topbar {
-            display:flex; justify-content:space-between;
-            align-items:center; gap:16px; margin-bottom:24px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:16px;
+            margin-bottom:24px;
         }
+
         .faculty-eyebrow {
-            color:#66809b; font-size:11px;
-            font-weight:700; letter-spacing:1.4px;
+            color:#66809b;
+            font-size:11px;
+            font-weight:700;
+            letter-spacing:1.4px;
         }
-        .faculty-topbar h2 { color:#173b68; font-weight:750; }
-        .faculty-topbar p { color:#718096; margin:5px 0 0; }
+
+        .faculty-topbar h2 {
+            color:#173b68;
+            font-weight:750;
+        }
+
+        .faculty-topbar p {
+            color:#718096;
+            margin:5px 0 0;
+        }
+
         .faculty-back-btn,.faculty-view-btn {
-            border:1px solid #d6e1ed; color:#173b68;
+            border:1px solid #d6e1ed;
+            color:#173b68;
             background:white;
         }
+
         .faculty-review-hero,.faculty-section {
-            background:white; border:1px solid #e3eaf2;
-            border-radius:14px; padding:22px; margin-bottom:18px;
+            background:white;
+            border:1px solid #e3eaf2;
+            border-radius:14px;
+            padding:22px;
+            margin-bottom:18px;
         }
+
         .faculty-review-hero {
-            display:flex; align-items:center; gap:18px;
+            display:flex;
+            align-items:center;
+            gap:18px;
         }
+
         .faculty-avatar,.faculty-section-icon {
-            width:48px; height:48px; border-radius:12px;
-            display:grid; place-items:center;
-            background:#eaf1fa; color:#1d4d7c; font-size:23px;
+            width:48px;
+            height:48px;
+            border-radius:12px;
+            display:grid;
+            place-items:center;
+            background:#eaf1fa;
+            color:#1d4d7c;
+            font-size:23px;
         }
-        .faculty-review-hero h3 { margin:3px 0; color:#173b68; }
-        .faculty-app-number { color:#718096; font-size:13px; }
+
+        .faculty-review-hero h3 {
+            margin:3px 0;
+            color:#173b68;
+        }
+
+        .faculty-app-number {
+            color:#718096;
+            font-size:13px;
+        }
+
         .faculty-eligibility {
-            padding:8px 13px; border-radius:20px;
-            font-weight:700; font-size:13px;
+            padding:8px 13px;
+            border-radius:20px;
+            font-weight:700;
+            font-size:13px;
         }
-        .faculty-eligibility.eligible { background:#e8f6ed; color:#247343; }
-        .faculty-eligibility.ineligible { background:#fff0ed; color:#b13b32; }
+
+        .faculty-eligibility.eligible {
+            background:#e8f6ed;
+            color:#247343;
+        }
+
+        .faculty-eligibility.ineligible {
+            background:#fff0ed;
+            color:#b13b32;
+        }
+
         .faculty-metric {
-            background:white; border:1px solid #e3eaf2;
-            border-radius:12px; padding:18px; height:100%;
+            background:white;
+            border:1px solid #e3eaf2;
+            border-radius:12px;
+            padding:18px;
+            height:100%;
         }
-        .faculty-metric span { display:block; color:#718096; font-size:12px; }
-        .faculty-metric strong { display:block; color:#173b68; font-size:21px; margin-top:8px; }
+
+        .faculty-metric span {
+            display:block;
+            color:#718096;
+            font-size:12px;
+        }
+
+        .faculty-metric strong {
+            display:block;
+            color:#173b68;
+            font-size:21px;
+            margin-top:8px;
+        }
+
         .faculty-section-heading {
-            display:flex; align-items:center; gap:13px;
+            display:flex;
+            align-items:center;
+            gap:13px;
             margin-bottom:20px;
         }
-        .faculty-section-heading h5 { margin:0; color:#173b68; font-weight:700; }
-        .faculty-section-heading p { margin:4px 0 0; color:#718096; font-size:12px; }
+
+        .faculty-section-heading h5 {
+            margin:0;
+            color:#173b68;
+            font-weight:700;
+        }
+
+        .faculty-section-heading p {
+            margin:4px 0 0;
+            color:#718096;
+            font-size:12px;
+        }
+
         .faculty-detail-grid {
-            display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
             gap:12px;
         }
+
         .faculty-detail-item {
-            background:#f7f9fc; padding:13px; border-radius:9px;
+            background:#f7f9fc;
+            padding:13px;
+            border-radius:9px;
             overflow-wrap:anywhere;
         }
-        .faculty-detail-item small { display:block; color:#718096; }
-        .faculty-detail-item strong { color:#183452; }
+
+        .faculty-detail-item small {
+            display:block;
+            color:#718096;
+        }
+
+        .faculty-detail-item strong {
+            color:#183452;
+        }
+
         .faculty-document {
-            display:flex; align-items:center; gap:14px;
-            padding:15px 0; border-top:1px solid #edf1f5;
+            display:flex;
+            align-items:center;
+            gap:14px;
+            padding:15px 0;
+            border-top:1px solid #edf1f5;
         }
-        .faculty-document-icon { font-size:25px; color:#315f8d; }
-        .faculty-document h6 { margin-bottom:5px; color:#173b68; }
-        .faculty-document-actions { display:flex; gap:7px; flex-wrap:wrap; }
-        .faculty-approve-btn { background:#e8f6ed; color:#247343; }
-        .faculty-reject-btn { background:#fff0ed; color:#b13b32; }
-        .faculty-approve-btn,.faculty-reject-btn {
-            border:0; font-weight:600;
+
+        .faculty-document-icon {
+            font-size:25px;
+            color:#315f8d;
         }
-        .faculty-status {
-            display:inline-block; padding:5px 10px;
-            border-radius:20px; background:#edf2f7;
-            color:#40566e; font-size:12px; font-weight:650;
+
+        .faculty-document h6 {
+            margin-bottom:5px;
+            color:#173b68;
         }
-        .faculty-count { margin-left:auto; color:#718096; font-size:12px; }
-        .faculty-empty {
-            text-align:center; padding:30px 15px;
-            background:#f7f9fc; border-radius:10px; color:#718096;
-        }
-        .faculty-remarks { min-height:110px; }
-        .faculty-review-actions { display:flex; gap:10px; margin-top:15px; flex-wrap:wrap; }
-        .faculty-warning {
-            margin-top:15px; padding:12px; border-radius:8px;
-            background:#fff5df; color:#80570d; font-size:13px;
-        }
-        .faculty-search-box {
-            display:flex; gap:10px; margin-bottom:18px;
+
+        .faculty-document-actions {
+            display:flex;
+            gap:7px;
             flex-wrap:wrap;
         }
-        .faculty-search-box input { flex:1; min-width:180px; }
+
+        .faculty-approve-btn {
+            background:#e8f6ed;
+            color:#247343;
+        }
+
+        .faculty-reject-btn {
+            background:#fff0ed;
+            color:#b13b32;
+        }
+
+        .faculty-approve-btn,.faculty-reject-btn {
+            border:0;
+            font-weight:600;
+        }
+
+        .faculty-status {
+            display:inline-block;
+            padding:5px 10px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:650;
+        }
+
+        .faculty-status-pending {
+            background:#fff4df;
+            color:#946200;
+        }
+
+        .faculty-status-approved {
+            background:#e5f7ec;
+            color:#187342;
+        }
+
+        .faculty-status-rejected {
+            background:#fdebea;
+            color:#b42318;
+        }
+
+        .faculty-status-eligible {
+            background:#e5f7ec;
+            color:#187342;
+        }
+
+        .faculty-status-ineligible {
+            background:#fdebea;
+            color:#b42318;
+        }
+
+        .faculty-status-default {
+            background:#edf2f7;
+            color:#40566e;
+        }
+
+        .faculty-count {
+            margin-left:auto;
+            color:#718096;
+            font-size:12px;
+        }
+
+        .faculty-empty {
+            text-align:center;
+            padding:30px 15px;
+            background:#f7f9fc;
+            border-radius:10px;
+            color:#718096;
+        }
+
+        .faculty-remarks {
+            min-height:110px;
+        }
+
+        .faculty-review-actions {
+            display:flex;
+            gap:10px;
+            margin-top:15px;
+            flex-wrap:wrap;
+        }
+
+        .faculty-warning {
+            margin-top:15px;
+            padding:12px;
+            border-radius:8px;
+            background:#fff5df;
+            color:#80570d;
+            font-size:13px;
+        }
+
+        .faculty-search-box {
+            display:flex;
+            gap:10px;
+            margin-bottom:18px;
+            flex-wrap:wrap;
+        }
+
+        .faculty-search-box input {
+            flex:1;
+            min-width:180px;
+        }
+
         @media(max-width:650px) {
-            .faculty-topbar,.faculty-review-hero { align-items:flex-start; flex-wrap:wrap; }
-            .faculty-document { align-items:flex-start; flex-wrap:wrap; }
-            .faculty-document-actions { width:100%; }
+            .faculty-topbar,.faculty-review-hero {
+                align-items:flex-start;
+                flex-wrap:wrap;
+            }
+
+            .faculty-document {
+                align-items:flex-start;
+                flex-wrap:wrap;
+            }
+
+            .faculty-document-actions {
+                width:100%;
+            }
         }
     `;
 
     document.head.appendChild(style);
 }
 
+
 function facultyStatus(status) {
-    return `<span class="faculty-status">${esc(status || 'Pending')}</span>`;
+    const value = String(status || 'Pending').trim();
+    const normalized = value.toLowerCase();
+
+    const classMap = {
+        pending: 'faculty-status-pending',
+        approved: 'faculty-status-approved',
+        rejected: 'faculty-status-rejected',
+        eligible: 'faculty-status-eligible',
+        ineligible: 'faculty-status-ineligible',
+        'documents pending': 'faculty-status-pending'
+    };
+
+    const badgeClass = classMap[normalized] || 'faculty-status-default';
+
+    return `
+        <span class="faculty-status ${badgeClass}">
+            ${esc(value)}
+        </span>
+    `;
 }
+
 
 function facultyDetailRows(details) {
     if (!details) return '';
 
     if (typeof details === 'string') {
-        try { details = JSON.parse(details); }
-        catch { return ''; }
+        try {
+            details = JSON.parse(details);
+        } catch {
+            return '';
+        }
     }
 
     if (typeof details !== 'object') return '';
@@ -2028,15 +2254,23 @@ function facultyDetailRows(details) {
     }
 
     collect(details);
+
     return `<div class="faculty-detail-grid">${items.join('')}</div>`;
 }
+
 
 async function facultyLoadApplications(search = '', status = '') {
     ensureFacultyStyles();
 
     const params = new URLSearchParams();
-    if (search.trim()) params.set('q', search.trim());
-    if (status) params.set('status', status);
+
+    if (search.trim()) {
+        params.set('q', search.trim());
+    }
+
+    if (status) {
+        params.set('status', status);
+    }
 
     const query = params.toString();
     const endpoint = '/api/faculty/applications' + (query ? '?' + query : '');
@@ -2095,16 +2329,24 @@ async function facultyLoadApplications(search = '', status = '') {
                 <div class="faculty-empty">
                     <i class="bi bi-folder2-open fs-2"></i>
                     <h6 class="mt-2">No applications found</h6>
-                    <p class="mb-0">No applications are currently assigned to you
-                    or no results match your filters.</p>
+                    <p class="mb-0">
+                        No applications are currently assigned to you
+                        or no results match your filters.
+                    </p>
                 </div>
             `;
             return;
         }
 
         results.innerHTML = tbl(
-            ['Application No', 'Student Name', 'Course',
-             'Percentage', 'Status', 'Action'],
+            [
+                'Application No',
+                'Student Name',
+                'Course',
+                'Percentage',
+                'Status',
+                'Action'
+            ],
             rows.map(a => [
                 esc(a.app_no),
                 esc(a.name),
@@ -2117,16 +2359,14 @@ async function facultyLoadApplications(search = '', status = '') {
                 </button>`
             ])
         );
+
     } catch (error) {
         $('facultyApplicationResults').innerHTML = `
             <div class="faculty-empty">
                 Unable to load applications. Please refresh and try again.
             </div>
         `;
+
         console.error('Faculty applications error:', error);
     }
 }
-
-
-
-draw();
