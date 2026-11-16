@@ -51,9 +51,16 @@ ${rows.length ? rows.map(row => `<tr>${row.map(cell =>
 function setRole(newRole) {
     role = newRole;
     reg = false;
+
+    document.querySelectorAll('.role-button').forEach(button => {
+        button.classList.toggle(
+            'active',
+            button.dataset.role === newRole
+        );
+    });
+
     draw();
 }
-
 function draw() {
     $('ttl').textContent =
         role[0].toUpperCase() + role.slice(1) +
@@ -970,3 +977,15 @@ async function sendAnnouncement() {
 }
 
 draw();
+function togglePassword() {
+    const password = $('pw');
+    const button = $('pwToggle');
+
+    if (password.type === 'password') {
+        password.type = 'text';
+        button.innerHTML = '<i class="bi bi-eye-slash"></i>';
+    } else {
+        password.type = 'password';
+        button.innerHTML = '<i class="bi bi-eye"></i>';
+    }
+}
