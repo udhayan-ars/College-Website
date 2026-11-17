@@ -232,3 +232,30 @@ form input::placeholder {
         padding: 11px 3px;
     }
 }
+/* Input Validation Improvements */
+
+form input:invalid:not(:placeholder-shown) {
+    border-color: #dc2626;
+}
+
+form input:valid:not(:placeholder-shown) {
+    border-color: #16a34a;
+}
+
+/* Keyboard Accessibility */
+
+.role-btn:focus-visible,
+#loginButton:focus-visible,
+.forgot-password a:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 3px;
+}
+
+/* Disabled Login Button */
+
+#loginButton:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
