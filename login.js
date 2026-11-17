@@ -76,6 +76,14 @@ loginForm.addEventListener("submit", async (event) => {
         showMessage("Please enter your email and password.");
         return;
     }
+// Validate email format
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailPattern.test(email)) {
+    showMessage("Please enter a valid email address.");
+    emailInput.focus();
+    return;
+}
 
     if (!selectedRole) {
         showMessage("Please select your account type.");
