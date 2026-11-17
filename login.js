@@ -80,7 +80,7 @@ loginForm.addEventListener("submit", async (event) => {
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 if (!emailPattern.test(email)) {
-    showMessage("Please enter a valid email address.");
+    showMessage("santhosh@gmail.com");
     emailInput.focus();
     return;
 }
